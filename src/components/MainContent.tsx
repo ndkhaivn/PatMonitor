@@ -1,4 +1,6 @@
 import React from "react"
+import FHIRServer from "../DataModel/FHIRServer";
+
 
 export default function MainContent() {
   return (
@@ -39,5 +41,11 @@ export default function MainContent() {
 
 
     </div>
+
+
   )
 }
+
+console.log("test");
+let obj = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi")
+obj.getPatientList("string");
