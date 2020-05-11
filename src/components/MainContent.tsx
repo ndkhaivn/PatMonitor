@@ -48,4 +48,9 @@ export default function MainContent() {
 
 console.log("test");
 let obj = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi")
-obj.getPatientList("string");
+let test = obj.getPatientList("string").then(result => {
+  result = result.sort((enc1: any, enc2: any) => enc1.id < enc2.id);
+  console.log(result);
+
+  
+});
