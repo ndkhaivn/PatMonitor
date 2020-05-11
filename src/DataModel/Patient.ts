@@ -1,4 +1,4 @@
-export default class Patient extends Decodeable{
+export default class Patient{
   firstName: string | undefined;
   lastName: string | undefined;
 
