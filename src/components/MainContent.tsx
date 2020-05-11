@@ -1,43 +1,17 @@
-import React from "react"
+import React from 'react'
+import { Navbar, Alignment, Button } from '@blueprintjs/core'
+import PatientSelect from './PatientSelect'
 
 export default function MainContent() {
+  
   return (
     <div className="main-content">
-
-<div className="tbl-header">
-          <table cellPadding="0" cellSpacing="0">
-            <thead>
-              <tr>
-                <th>Patient Name</th>
-                <th>Total Cholesterol</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-          </table>
-        </div>
-        <div className="tbl-content">
-          <table cellPadding="0" cellSpacing="0">
-            <tbody>
-              <tr>
-                <td>ZHANG WEI</td>
-                <td>20 mg/dL </td>
-                <td>2005-09-27 48:33+10:00</td>
-              </tr>
-              <tr>
-                <td>ANIKA AADESH</td>
-                <td>33 mg/dL </td>
-                <td>2005-09-27 48:33+10:00</td>
-              </tr>
-              <tr>
-                <td>HILAL AKAY</td>
-                <td>12 mg/dL </td>
-                <td>2005-09-27 48:33+10:00</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
+      <Navbar className="toolbar">
+        <Navbar.Group>
+          <PatientSelect />
+        </Navbar.Group>
+      </Navbar>
 
     </div>
-  )
+  );
 }

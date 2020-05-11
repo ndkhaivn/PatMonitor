@@ -6,8 +6,6 @@ export default function Navigation() {
     <Navbar className="bp3-dark">
       <Navbar.Group>
         <Navbar.Heading>PatMonitor</Navbar.Heading>
-        <Navbar.Divider />
-        <Button className="bp3-minimal" icon="home" text="Home" />
       </Navbar.Group>
       <Navbar.Group align={Alignment.RIGHT}>
         <Button className="bp3-minimal" icon="user" />
