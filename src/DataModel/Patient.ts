@@ -4,7 +4,7 @@ import PatientInfo from "./PatientInfo";
 import Cholesterol from "./Cholesterol";
 
 export default class Patient {
-  id: string | undefined;
+  id: string | "";
   displayName: string | undefined;
   dataSource: DataSource | undefined;
 
@@ -15,13 +15,22 @@ export default class Patient {
   constructor(newId: string, newDisplayName: string, newDataSource: DataSource) {
     this.id = newId;
     this.displayName = newDisplayName;
-    this.dataSource;
+    this.dataSource = newDataSource;
   }
 
   getCholesterol() {
-  }
+    this.dataSource?.getCholesterol(this.id).then(result => {
+      this.totalChol = result;
+      console.log(this.totalChol);
+    }
+
+    );
+    }
 
   getPersonalInfo() {
-  }
+    this.dataSource?.getPatientInfo(this.id).then(result => {
+      this.patientInfo = result;
+  });
+}
 
 }

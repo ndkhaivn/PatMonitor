@@ -2,11 +2,11 @@ export default class PatientInfo {
   birthdate: string | undefined;
   gender: string | undefined;
   address: {
-    line: string[] | undefined,
-    city: string | undefined,
-    state: string |undefined,
-    country: string | undefined
-  } | {};
+    line: string[] | ["line"], 
+    city: string |"city",
+    state: string | "state",
+    country: string | "country"
+} ;
 
   constructor(newBirthdate: string, newGender: string, newAddress: {line: string[]
     city: string
@@ -14,7 +14,12 @@ export default class PatientInfo {
     country: string}) {
     this.birthdate = newBirthdate;
     this.gender = newGender;
-    this.address = newAddress;
+    this.address = {
+      line: ["line 1, line 2"], 
+      city: "city",
+      state: "state",
+      country: "country"
+    }
   }
 
 }

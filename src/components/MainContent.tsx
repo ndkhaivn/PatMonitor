@@ -1,5 +1,7 @@
 import React from "react"
 import FHIRServer from "../DataModel/FHIRServer";
+import Patient from "../DataModel/Patient";
+import DataSource from "../DataModel/DataSource";
 
 
 export default function MainContent() {
@@ -46,21 +48,45 @@ export default function MainContent() {
   )
 }
 
-console.log("test");
-let obj = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi")
+function test() {
+  console.log("test");
+  let obj = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi")
 
-let patientList = obj.getPatientList("500").then(result => {
-  console.log("Patient List: ", result);
+  let patientList = obj.getPatientList("500").then(result => {
+    console.log("Patient List: ", result);
 
-  
-});
+    
+  });
 
-let patientInfo = obj.getPatientInfo("29163").then(result =>
-  console.log("Patient Info: ", result)
-  );
+  let patientInfo = obj.getPatientInfo("29163").then(result =>
+    console.log("Patient Info: ", result)
+    );
 
 
-let cholesterolMeasurement = obj.getCholesterol("29163").then(result =>
-  console.log("Cholesterol Measurement: ", result)
-  );
+  let cholesterolMeasurement = obj.getCholesterol("29163").then(result =>
+    console.log("Cholesterol Measurement: ", result)
+    );
+}
 
+
+function dummyPatients(patientIDs: string[], dataSource: DataSource) {
+  let patientsArray:Patient[] = [];
+  for (let i = 0; i<patientIDs.length; i++) {
+    let newPatient = new Patient(patientIDs[i], "Patient" + i, dataSource);
+    newPatient.getCholesterol();
+    newPatient.getPersonalInfo();
+    patientsArray.push(newPatient);
+    
+  }
+
+
+  return patientsArray;
+}
+
+let patientIds = ["141425", "120561", "354393", "2378875", "844863"];
+let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
+
+console.log(dummyPatients(patientIds, dataSource))
+
+console.log('done')
+//test()

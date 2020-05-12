@@ -4,6 +4,7 @@ import Patient from './Patient';
 import axios from 'axios';
 import PatientInfo from './PatientInfo';
 import Cholesterol from './Cholesterol';
+import { elementIsOrContains } from '@blueprintjs/core/lib/esm/common/utils';
 
 export default class FHIRServer implements DataSource {
   rootUrl: string;
@@ -43,47 +44,54 @@ export default class FHIRServer implements DataSource {
       nextUrl = link.url;
     }
 
+
     // patients.sort();
+  
 
     return patients;
   }
 
   async getPatientInfo(patientID: string): Promise<any> {
+    // make request
     let res = await axios.get(
       this.rootUrl + "Patient/" + patientID
     )
 
-
+    // extract patient data
     let patient = res.data;
+
+    let birthDate = patient.birthDate;
+    let gender = patient.gender;
     let address = {
       line: patient.address.line,
       city: patient.address.city,
       state: patient.address.state,
       country: patient.address.country
     }
-    let birthDate = patient.birthDate;
-    let gender = patient.gender;
+
+    // instantiate patientInfo
     let patientInfo = new PatientInfo(birthDate, gender, address);
 
     return patientInfo;
   }
 
   async getCholesterol(patientID: string): Promise<any> {
+    // make request
     let res = await axios.get(
       this.rootUrl +  "Observation?patient=" + patientID + "&code=2093-3&_sort=date"
     )
     
+    // extract latest observation
     let totalObs = res.data.total;
     let data = res.data.entry as Array<any>;
-
- 
     let latestObs = data[totalObs - 1];
 
+    // instantiate cholesterol
     let time = latestObs.resource.effectiveDateTime;
     let value = latestObs.resource.valueQuantity.value;
     let unit = latestObs.resource.valueQuantity.unit;
-    
     let cholesterol = new Cholesterol(time, value, unit);
+
     return cholesterol;
   }
 
