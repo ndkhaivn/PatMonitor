@@ -1,35 +1,56 @@
 import React from 'react';
+import { useTable, useSortBy } from 'react-table';
+import { Icon } from "@blueprintjs/core";
 
-export default function PatientsTable() {
-  var columns: string[] = [];
-  var data: string[] = [];
+export default function PatientsTable({ columns, data }: {columns: any[], data: any[]}) {
+
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    rows,
+    prepareRow,
+  } = useTable({
+    columns,
+    data,
+  }, useSortBy);
 
   return (
     <div className="tbl-header">
-      <table cellPadding="0" cellSpacing="0">
+      <table {...getTableProps()}>
         <thead>
-          <tr>
-            <th>Patient Name</th>
-            <th>Total Cholesterol</th>
-            <th>Time</th>
-          </tr>
+          {headerGroups.map((headerGroup) => (
+            <tr {...headerGroup.getHeaderGroupProps()}>
+              {headerGroup.headers.map((column) => (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  
+                  {column.render('Header')}
+
+                  {/* Add a sort direction indicator */}
+                  
+                  <span>
+
+                    <Icon icon={column.isSorted ? column.isSortedDesc ? 'caret-down' : 'caret-up' : 'double-caret-vertical'} />
+                  </span>
+
+                </th>
+              ))}
+            </tr>
+          ))}
         </thead>
-        <tbody>
-          <tr>
-            <td>ZHANG WEI</td>
-            <td>20 mg/dL </td>
-            <td>2005-09-27 48:33+10:00</td>
-          </tr>
-          <tr>
-            <td>ANIKA AADESH</td>
-            <td>33 mg/dL </td>
-            <td>2005-09-27 48:33+10:00</td>
-          </tr>
-          <tr>
-            <td>HILAL AKAY</td>
-            <td>12 mg/dL </td>
-            <td>2005-09-27 48:33+10:00</td>
-          </tr>
+        <tbody {...getTableBodyProps()}>
+          {rows.map((row) => {
+            prepareRow(row);
+            return (
+              <tr {...row.getRowProps()}>
+                {row.cells.map((cell) => {
+                  return (
+                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  );
+                })}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
