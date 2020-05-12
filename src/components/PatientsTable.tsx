@@ -1,8 +1,12 @@
 import React from 'react';
 import { useTable, useSortBy } from 'react-table';
 import { Icon } from "@blueprintjs/core";
+import { useState } from 'react';
+import PatientInfoDialog from './PatientInfoDialog';
 
 export default function PatientsTable({ columns, data }: {columns: any[], data: any[]}) {
+
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   const {
     getTableProps,
@@ -16,43 +20,49 @@ export default function PatientsTable({ columns, data }: {columns: any[], data: 
   }, useSortBy);
 
   return (
-    <div className="tbl-header">
-      <table {...getTableProps()}>
-        <thead>
-          {headerGroups.map((headerGroup) => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+    <div>
+
+      <PatientInfoDialog isOpen={isDialogOpen} toggleOpen={() => setDialogOpen(!isDialogOpen)}/>
+
+      <div className="tbl-header" id="patient-table">
+        <table {...getTableProps()}>
+          <thead>
+            {headerGroups.map((headerGroup) => (
+              <tr {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column) => (
+                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
                   
-                  {column.render('Header')}
+                    {column.render('Header')}
 
-                  {/* Add a sort direction indicator */}
+                    {/* Add a sort direction indicator */}
                   
-                  <span>
+                    <span>
 
-                    <Icon icon={column.isSorted ? column.isSortedDesc ? 'caret-down' : 'caret-up' : 'double-caret-vertical'} />
-                  </span>
+                      <Icon icon={column.isSorted ? column.isSortedDesc ? 'caret-down' : 'caret-up' : 'double-caret-vertical'} />
+                    </span>
 
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
-            prepareRow(row);
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map((cell) => {
-                  return (
-                    <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
-                  );
-                })}
+                  </th>
+                ))}
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {rows.map((row) => {
+              prepareRow(row);
+              return (
+                <tr {...row.getRowProps()} onClick={ () => setDialogOpen(!isDialogOpen) }>
+                  {row.cells.map((cell) => {
+                    return (
+                      <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                    );
+                  })}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
+    
   );
 }
