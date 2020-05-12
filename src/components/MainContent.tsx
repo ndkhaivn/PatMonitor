@@ -88,5 +88,4 @@ let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhi
 
 console.log(dummyPatients(patientIds, dataSource))
 
-console.log('done')
 //test()

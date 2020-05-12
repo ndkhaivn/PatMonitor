@@ -8,18 +8,16 @@ export default class PatientInfo {
     country: string | "country"
 } ;
 
-  constructor(newBirthdate: string, newGender: string, newAddress: {line: string[]
-    city: string
-    state: string
-    country: string}) {
+  constructor(newBirthdate: string, newGender: string, newAddress: {
+    line: string[], 
+    city: string,
+    state: string,
+    country: string
+  }) {
     this.birthdate = newBirthdate;
     this.gender = newGender;
-    this.address = {
-      line: ["line 1, line 2"], 
-      city: "city",
-      state: "state",
-      country: "country"
-    }
+
+    this.address = newAddress;
   }
 
 }

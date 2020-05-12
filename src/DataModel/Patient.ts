@@ -21,7 +21,6 @@ export default class Patient {
   getCholesterol() {
     this.dataSource?.getCholesterol(this.id).then(result => {
       this.totalChol = result;
-      console.log(this.totalChol);
     }
 
     );

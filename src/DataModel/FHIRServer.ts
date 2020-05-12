@@ -63,11 +63,12 @@ export default class FHIRServer implements DataSource {
     let birthDate = patient.birthDate;
     let gender = patient.gender;
     let address = {
-      line: patient.address.line,
-      city: patient.address.city,
-      state: patient.address.state,
-      country: patient.address.country
+      line: patient.address[0].line,
+      city: patient.address[0].city,
+      state: patient.address[0].state,
+      country: patient.address[0].country
     }
+
 
     // instantiate patientInfo
     let patientInfo = new PatientInfo(birthDate, gender, address);
