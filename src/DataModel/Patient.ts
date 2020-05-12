@@ -1,24 +1,16 @@
 import { checkServerIdentity } from "tls";
 import DataSource from "./DataSource";
+import PatientInfo from "./PatientInfo";
+import Cholesterol from "./Cholesterol";
 
 export default class Patient {
   id: string | undefined;
   displayName: string | undefined;
   dataSource: DataSource | undefined;
 
-  totalChol: {
-    value:number | undefined;
-    unit: string | undefined;
-  } | undefined;
+  totalChol: Cholesterol | undefined;
 
-  birthdate: string | undefined;
-  gender: string | undefined;
-  address: {
-    line: string[] | undefined;
-    city: string | undefined;
-    state: string |undefined;
-    country: string | undefined;
-  } | undefined;
+  patientInfo: PatientInfo | undefined;
   
   constructor(newId: string, newDisplayName: string, newDataSource: DataSource) {
     this.id = newId;

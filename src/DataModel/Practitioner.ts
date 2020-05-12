@@ -1,4 +1,4 @@
-export default class Practioner {
+export default class Practitioner {
   identifier: string;
 
   constructor(id: string) {
@@ -6,6 +6,6 @@ export default class Practioner {
   }
 
   getPatientList() {
-    
+
   }
 }

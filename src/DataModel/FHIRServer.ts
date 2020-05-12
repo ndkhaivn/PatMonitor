@@ -2,6 +2,8 @@ import DataSource from './DataSource';
 
 import Patient from './Patient';
 import axios from 'axios';
+import PatientInfo from './PatientInfo';
+import Cholesterol from './Cholesterol';
 
 export default class FHIRServer implements DataSource {
   rootUrl: string;
@@ -17,23 +19,21 @@ export default class FHIRServer implements DataSource {
 
     let res = await axios.get(
       this.rootUrl +
-        'Encounter?participant.identifier=http://hl7.org/fhir/sid/us-npi|500&_count=200&_include=Encounter.participant.individual&_include=Encounter.patient'
+        "Encounter?participant.identifier=" + this.idSystem + "|" + pracIdentifier + "&_count=200&_include=Encounter.participant.individual&_include=Encounter.patient"
     )
 
     let linkArr = res.data.link as Array<any>;
     let link = linkArr.find(linkObj => linkObj.relation == "next");
     let nextUrl = link.url;
     let entries = res.data.entry as Array<any>;
-    patients = patients.concat(entries.map(entry => entry.resource));
-    console.log(res.data);
+    patients = patients.concat(entries.map(entry => entry.resource.subject));
 
     let counter = 0;
 
-    while (1) {
+    while (counter < 2) {
       counter++;
       entries = res.data.entry as Array<any>;
-      patients = patients.concat(entries.map(entry => entry.resource));
-      console.log(counter, res.data);
+      patients = patients.concat(entries.map(entry => entry.resource.subject));
       res = await axios.get(nextUrl);
       linkArr = res.data.link as Array<any>;
       link = linkArr.find(linkObj => linkObj.relation == "next");
@@ -48,16 +48,43 @@ export default class FHIRServer implements DataSource {
     return patients;
   }
 
-  getPatientInfo(patientID: string): string {
-    throw new Error('Method not implemented.');
+  async getPatientInfo(patientID: string): Promise<any> {
+    let res = await axios.get(
+      this.rootUrl + "Patient/" + patientID
+    )
+
+
+    let patient = res.data;
+    let address = {
+      line: patient.address.line,
+      city: patient.address.city,
+      state: patient.address.state,
+      country: patient.address.country
+    }
+    let birthDate = patient.birthDate;
+    let gender = patient.gender;
+    let patientInfo = new PatientInfo(birthDate, gender, address);
+
+    return patientInfo;
   }
 
-  getCholesterol(patientID: string): string {
-    // request Observations regarding cholesterol of patient sort by date
-    // url: rootUrl + "Observation?patient=" + patient_id + "&code=2093-3&_sort=date&_count=13"
+  async getCholesterol(patientID: string): Promise<any> {
+    let res = await axios.get(
+      this.rootUrl +  "Observation?patient=" + patientID + "&code=2093-3&_sort=date"
+    )
+    
+    let totalObs = res.data.total;
+    let data = res.data.entry as Array<any>;
 
-    throw new Error('Method not implemented.');
+ 
+    let latestObs = data[totalObs - 1];
+
+    let time = latestObs.resource.effectiveDateTime;
+    let value = latestObs.resource.valueQuantity.value;
+    let unit = latestObs.resource.valueQuantity.unit;
+    
+    let cholesterol = new Cholesterol(time, value, unit);
+    return cholesterol;
   }
 
-  async httpRequest(relPath: string, callback: Function) {}
 }

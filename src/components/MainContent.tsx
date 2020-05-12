@@ -48,9 +48,19 @@ export default function MainContent() {
 
 console.log("test");
 let obj = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi")
-let test = obj.getPatientList("string").then(result => {
-  result = result.sort((enc1: any, enc2: any) => enc1.id < enc2.id);
-  console.log(result);
+
+let patientList = obj.getPatientList("500").then(result => {
+  console.log("Patient List: ", result);
 
   
 });
+
+let patientInfo = obj.getPatientInfo("29163").then(result =>
+  console.log("Patient Info: ", result)
+  );
+
+
+let cholesterolMeasurement = obj.getCholesterol("29163").then(result =>
+  console.log("Cholesterol Measurement: ", result)
+  );
+
