@@ -31,7 +31,7 @@ export default class FHIRServer implements DataSource {
 
     let counter = 0;
 
-    while (counter < 2) {
+    while (counter<2) {
       counter++;
       entries = res.data.entry as Array<any>;
       patients = patients.concat(entries.map(entry => entry.resource.subject));
@@ -43,12 +43,17 @@ export default class FHIRServer implements DataSource {
       }
       nextUrl = link.url;
     }
+    let uniqueIDs = new Set();
+    patients.forEach(patient => uniqueIDs.add(patient.reference))
 
+    let uniquePatients:any[] = []
+    uniqueIDs.forEach(patient => {
+      let currentPatient = patients.find(obj => obj.reference == patient)
+      currentPatient.reference = currentPatient.reference.split("/")[1]
+      uniquePatients.push(currentPatient)
+    });
 
-    // patients.sort();
-  
-
-    return patients;
+    return uniquePatients;
   }
 
   async getPatientInfo(patientID: string): Promise<any> {

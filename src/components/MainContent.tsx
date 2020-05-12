@@ -2,6 +2,7 @@ import React from "react"
 import FHIRServer from "../DataModel/FHIRServer";
 import Patient from "../DataModel/Patient";
 import DataSource from "../DataModel/DataSource";
+import Practitioner from "../DataModel/Practitioner";
 
 
 export default function MainContent() {
@@ -49,21 +50,22 @@ export default function MainContent() {
 }
 
 function test() {
-  console.log("test");
-  let obj = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi")
+  console.log("BEGIN TEST");
+  let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
+  let practitioner = new Practitioner("500", dataSource);
 
-  let patientList = obj.getPatientList("500").then(result => {
+  let patientList = dataSource.getPatientList("500").then(result => {
     console.log("Patient List: ", result);
-
     
   });
 
-  let patientInfo = obj.getPatientInfo("29163").then(result =>
+  
+  let patientInfo = dataSource.getPatientInfo("29163").then(result =>
     console.log("Patient Info: ", result)
     );
 
 
-  let cholesterolMeasurement = obj.getCholesterol("29163").then(result =>
+  let cholesterolMeasurement = dataSource.getCholesterol("29163").then(result =>
     console.log("Cholesterol Measurement: ", result)
     );
 }
@@ -86,6 +88,6 @@ function dummyPatients(patientIDs: string[], dataSource: DataSource) {
 let patientIds = ["141425", "120561", "354393", "2378875", "844863"];
 let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
 
-console.log(dummyPatients(patientIds, dataSource))
+//console.log(dummyPatients(patientIds, dataSource))
 
-//test()
+test()
