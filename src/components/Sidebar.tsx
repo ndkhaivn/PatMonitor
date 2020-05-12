@@ -15,6 +15,7 @@ export default function Sidebar() {
           onChange={(event: any) => setPractitionerID(event.target.value)}
           placeholder="Practitioner ID"
           value={practitionerID}
+          large={true}
       />
 
     </div>
