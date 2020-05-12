@@ -3,6 +3,8 @@ import FHIRServer from "../DataModel/FHIRServer";
 import Patient from "../DataModel/Patient";
 import DataSource from "../DataModel/DataSource";
 import Practitioner from "../DataModel/Practitioner";
+import Cholesterol from "../DataModel/Cholesterol";
+import PatientInfo from "../DataModel/PatientInfo";
 
 
 export default function MainContent() {
@@ -49,8 +51,14 @@ export default function MainContent() {
   )
 }
 
+let patientIds = ["141425", "120561", "354393", "2378875", "844863"];
+let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
+
+console.log(offlinePatients(patientIds, dataSource));
+
+
+
 function test() {
-  console.log("BEGIN TEST");
   let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
   let practitioner = new Practitioner("500", dataSource);
 
@@ -59,17 +67,14 @@ function test() {
   
   });
 
-  
   let patientInfo = dataSource.getPatientInfo("29163").then(result =>
     console.log("Patient Info: ", result)
     );
-
 
   let cholesterolMeasurement = dataSource.getCholesterol("29163").then(result =>
     console.log("Cholesterol Measurement: ", result)
     );
 }
-
 
 function dummyPatients(patientIDs: string[], dataSource: DataSource) {
   let patientsArray:Patient[] = [];
@@ -78,6 +83,8 @@ function dummyPatients(patientIDs: string[], dataSource: DataSource) {
     newPatient.getCholesterol();
     newPatient.getPersonalInfo();
     patientsArray.push(newPatient);
+
+  
     
   }
 
@@ -85,15 +92,28 @@ function dummyPatients(patientIDs: string[], dataSource: DataSource) {
   return patientsArray;
 }
 
-let patientIds = ["141425", "120561", "354393", "2378875", "844863"];
-let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
+function offlinePatients(patientIDs: string[], dataSource: DataSource) {
+  let patientsArray:Patient[] = [];
+  for (let i = 0; i<patientIDs.length; i++) {
+    let newPatient = new Patient(patientIDs[i], "Patient" + i, dataSource);
+    newPatient.totalChol = new Cholesterol("time", 100, "mg/dL");
+    newPatient.patientInfo = new PatientInfo("birthDate", "gender", {
+      line: ["line"], 
+      city: "city",
+      state: "state",
+      country: "country"    
+    });
+    patientsArray.push(newPatient);
 
-//console.log(dummyPatients(patientIds, dataSource))
+  
+    
+  }
 
-fullTest()
+
+  return patientsArray;
+}
 
 function fullTest() {
-  console.log("BEGIN TEST");
   let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
   let practitioner = new Practitioner("500", dataSource);
 
