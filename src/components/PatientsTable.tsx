@@ -25,7 +25,7 @@ export default function PatientsTable({ columns, data }: {columns: any[], data: 
       <PatientInfoDialog isOpen={isDialogOpen} toggleOpen={() => setDialogOpen(!isDialogOpen)}/>
 
       <div className="tbl-header" id="patient-table">
-        <table {...getTableProps()}>
+        <table {...getTableProps()} cellSpacing={0}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
