@@ -50,7 +50,8 @@ export default class FHIRServer implements DataSource {
     uniqueIDs.forEach(patient => {
       let currentPatient = patients.find(obj => obj.reference == patient)
       currentPatient.reference = currentPatient.reference.split("/")[1]
-      uniquePatients.push(currentPatient)
+
+      uniquePatients.push(new Patient(currentPatient.reference, currentPatient.display, this))
     });
 
     return uniquePatients;
@@ -84,19 +85,25 @@ export default class FHIRServer implements DataSource {
   async getCholesterol(patientID: string): Promise<any> {
     // make request
     let res = await axios.get(
-      this.rootUrl +  "Observation?patient=" + patientID + "&code=2093-3&_sort=date"
+      this.rootUrl +  "Observation?patient=" + patientID + "&code=2093-3&_sort=-date"
     )
     
+    let cholesterol;
     // extract latest observation
     let totalObs = res.data.total;
-    let data = res.data.entry as Array<any>;
-    let latestObs = data[totalObs - 1];
+    if (totalObs > 0) {
+      let data = res.data.entry as Array<any>;
+      let latestObs = data[0];
+  
+      // instantiate cholesterol
+      let time = latestObs.resource.effectiveDateTime;
+      let value = latestObs.resource.valueQuantity.value;
+      let unit = latestObs.resource.valueQuantity.unit;
+      cholesterol = new Cholesterol(time, value, unit);
+    } else {
+      cholesterol = null;
+    }
 
-    // instantiate cholesterol
-    let time = latestObs.resource.effectiveDateTime;
-    let value = latestObs.resource.valueQuantity.value;
-    let unit = latestObs.resource.valueQuantity.unit;
-    let cholesterol = new Cholesterol(time, value, unit);
 
     return cholesterol;
   }

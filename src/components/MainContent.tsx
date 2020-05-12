@@ -56,7 +56,7 @@ function test() {
 
   let patientList = dataSource.getPatientList("500").then(result => {
     console.log("Patient List: ", result);
-    
+  
   });
 
   
@@ -90,4 +90,22 @@ let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhi
 
 //console.log(dummyPatients(patientIds, dataSource))
 
-test()
+fullTest()
+
+function fullTest() {
+  console.log("BEGIN TEST");
+  let dataSource = new FHIRServer('https://fhir.monash.edu/hapi-fhir-jpaserver/fhir/', "http://hl7.org/fhir/sid/us-npi");
+  let practitioner = new Practitioner("500", dataSource);
+
+  let patientList = dataSource.getPatientList("500").then(result => {   
+    console.log("Patient List: ", result);
+    result.forEach(function(element: Patient) {
+      element.getPersonalInfo();
+      element.getCholesterol();
+      
+    });
+  });
+
+  
+  
+}
