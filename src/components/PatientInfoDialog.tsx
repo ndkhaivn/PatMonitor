@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, Classes } from '@blueprintjs/core';
+import { Dialog, Classes, Button, Intent } from '@blueprintjs/core';
 
 
 export default function PatientInfoDialog({ isOpen, toggleOpen }: { isOpen: boolean, toggleOpen: () => void }) {
@@ -36,7 +36,7 @@ export default function PatientInfoDialog({ isOpen, toggleOpen }: { isOpen: bool
             </tr>
             <tr>
               <td> Address </td>
-              <td> Unit 1, 1 Chester Avenue, Clayton VIC 3168, Australia </td>
+              <td> Unit 1, 1 Chester Avenue <br/> Clayton 3168 <br/> Victoria, Australia </td>
             </tr>
 
           </tbody>
@@ -44,6 +44,12 @@ export default function PatientInfoDialog({ isOpen, toggleOpen }: { isOpen: bool
           <span> John Doe </span> */}
         </table>
 
+      </div>
+
+      <div className={Classes.DIALOG_FOOTER}>
+          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
+            <Button intent={Intent.DANGER} onClick={() => {}}>Stop Monitoring</Button>
+          </div>
       </div>
 
     </Dialog>

@@ -80,3 +80,7 @@
   font-weight: bold;
   padding-right: 20px;
 }
+
+#patient-info tr {
+  padding-bottom: 5px;
+}
