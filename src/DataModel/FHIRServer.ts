@@ -5,13 +5,16 @@ import axios from 'axios';
 import PatientInfo from './PatientInfo';
 import Cholesterol from './Cholesterol';
 import { elementIsOrContains } from '@blueprintjs/core/lib/esm/common/utils';
+import config from "../config";
 
 export default class FHIRServer implements DataSource {
+  
   rootUrl: string;
   idSystem: string;
-  constructor(url: string, idUrl: string) {
-    this.rootUrl = url;
-    this.idSystem = idUrl;
+
+  constructor() {
+    this.rootUrl = config.fihrRootUrl;
+    this.idSystem = config.fihrIdSystem;
   }
 
   async getPatientList(pracIdentifier: string): Promise<any> {
