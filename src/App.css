@@ -84,3 +84,8 @@
 #patient-info tr {
   padding-bottom: 5px;
 }
+
+#last-updated {
+  float: right;
+  padding-right: 10px;
+}

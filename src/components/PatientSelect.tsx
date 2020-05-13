@@ -27,8 +27,9 @@ export default function PatientSelect() {
     }
     return (
         <MenuItem
-            // icon={this.isFilmSelected(film) ? "tick" : "blank"}
+            icon={true ? "tick" : "blank"}
             key={patient}
+            label={`14253`}
             text={`${patient}`}
         />
     );
@@ -36,7 +37,6 @@ export default function PatientSelect() {
 
   return (
     <div>
-      <Label>
         <PatientMultiSelect
           items={filterPatient(patients, query)}
           itemRenderer={renderPatient}
@@ -45,16 +45,11 @@ export default function PatientSelect() {
           onQueryChange={setQuery}
           onItemSelect={() => {}}
           tagRenderer={(patient: string) => patient}
-
+          placeholder="Patient"
+          tagInputProps={{leftIcon: "plus"}}
+          fill={true}
         >
-          <InputGroup
-            fill={false}
-            placeholder="Select Tenant..."
-            // value={}
-            leftIcon="caret-down"
-          />
         </PatientMultiSelect>
-      </Label>
     </div>
   )
 }

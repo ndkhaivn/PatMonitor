@@ -62,6 +62,9 @@ export default function PatientsTable({ columns, data }: {columns: any[], data: 
           </tbody>
         </table>
       </div>
+
+
+      <i id="last-updated" className="bp3-text-muted">Last updated: 13/05/2020 19:30 </i>
     </div>
     
   );
