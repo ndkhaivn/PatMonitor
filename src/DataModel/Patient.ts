@@ -1,35 +1,22 @@
-import { checkServerIdentity } from "tls";
-import DataSource from "./DataSource";
-import PatientInfo from "./PatientInfo";
-import Cholesterol from "./Cholesterol";
+import { checkServerIdentity } from 'tls';
+import DataSource from './DataSource';
+import Cholesterol from './Cholesterol';
+import { Name, Address } from './Resource';
 
 export default class Patient {
-  id: string | "";
-  displayName: string | undefined;
-  dataSource: DataSource | undefined;
+  id: string
+  name: Name[]
+  gender: string
+  birthDate: string
+  address: Address[]
+  isMonitored: boolean;
 
-  totalChol: Cholesterol | undefined;
-
-  patientInfo: PatientInfo | undefined;
-  
-  constructor(newId: string, newDisplayName: string, newDataSource: DataSource) {
-    this.id = newId;
-    this.displayName = newDisplayName;
-    this.dataSource = newDataSource;
+  constructor(patientObj: any) {
+    this.id = patientObj.id;
+    this.name = patientObj.name;
+    this.gender = patientObj.gender;
+    this.birthDate = patientObj.birthDate;
+    this.address = patientObj.address;
+    this.isMonitored = false;
   }
-
-  getCholesterol() {
-    this.dataSource?.getCholesterol(this.id).then(result => {
-      this.totalChol = result;
-    }
-
-    );
-    }
-
-  getPersonalInfo() {
-    this.dataSource?.getPatientInfo(this.id).then(result => {
-      this.patientInfo = result;
-  });
-}
-
 }

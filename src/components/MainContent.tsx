@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Navbar, Alignment, Button } from '@blueprintjs/core'
 import PatientSelect from './PatientSelect'
 import { useTable } from "react-table";
 import PatientsTable from './PatientsTable';
+import { useDispatch } from "react-redux"
+
+import { fetchPatients } from '../store/patients/actions';
+import { Identifier } from '../DataModel/Resource';
+import FHIRServer from '../DataModel/FHIRServer';
 
 
 export default function MainContent() {
@@ -43,6 +48,12 @@ export default function MainContent() {
       time: new Date().toISOString(),
     },
   ];
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchPatients(new Identifier("http://hl7.org/fhir/sid/us-npi", "500")));
+  }, []);
 
   return (
     <div className="main-content">

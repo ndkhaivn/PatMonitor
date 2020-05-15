@@ -1,13 +1,10 @@
 export{}
 import Patient from "./Patient";
+import { Identifier } from './Resource';
 
 export default interface DataSource {
-    getPatientList(pracIdentifier: string): Promise<any>;
-
-    getPatientInfo(patientID: string): Promise<any>;
+    getPatientList(pracIdentifier: Identifier, 
+        progressCallback: (data: Patient[], progress: { loaded: number, total: number }) => void): Promise<any>;
     
     getCholesterol(patientID: string): Promise<any>;
-    
-
-
 }

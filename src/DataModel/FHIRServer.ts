@@ -2,113 +2,82 @@ import DataSource from './DataSource';
 
 import Patient from './Patient';
 import axios from 'axios';
-import PatientInfo from './PatientInfo';
 import Cholesterol from './Cholesterol';
 import { elementIsOrContains } from '@blueprintjs/core/lib/esm/common/utils';
 import config from "../config";
+import { Identifier, Name, Address, Measurement, Observation } from './Resource';
 
 export default class FHIRServer implements DataSource {
-  
+
   rootUrl: string;
-  idSystem: string;
 
   constructor() {
     this.rootUrl = config.fihrRootUrl;
-    this.idSystem = config.fihrIdSystem;
   }
 
-  async getPatientList(pracIdentifier: string): Promise<any> {
-
-    let patients: any[] = [];
-
-    let res = await axios.get(
-      this.rootUrl +
-        "Encounter?participant.identifier=" + this.idSystem + "|" + pracIdentifier + "&_count=200&_include=Encounter.participant.individual&_include=Encounter.patient"
-    )
-
-    let linkArr = res.data.link as Array<any>;
+  extractNextUrl(data: any) {
+    let linkArr = data.link as Array<any>;
     let link = linkArr.find(linkObj => linkObj.relation == "next");
-    let nextUrl = link.url;
-    let entries = res.data.entry as Array<any>;
-    patients = patients.concat(entries.map(entry => entry.resource.subject));
-
-    let counter = 0;
-
-    while (counter<2) {
-      counter++;
-      entries = res.data.entry as Array<any>;
-      patients = patients.concat(entries.map(entry => entry.resource.subject));
-      res = await axios.get(nextUrl);
-      linkArr = res.data.link as Array<any>;
-      link = linkArr.find(linkObj => linkObj.relation == "next");
-      if (!link) {
-        break;
-      }
-      nextUrl = link.url;
-    }
-    let uniqueIDs = new Set();
-    patients.forEach(patient => uniqueIDs.add(patient.reference))
-
-    let uniquePatients:any[] = []
-    uniqueIDs.forEach(patient => {
-      let currentPatient = patients.find(obj => obj.reference == patient)
-      currentPatient.reference = currentPatient.reference.split("/")[1]
-
-      uniquePatients.push(new Patient(currentPatient.reference, currentPatient.display, this))
-    });
-
-    return uniquePatients;
+    return link ? link.url : null;
   }
 
-  async getPatientInfo(patientID: string): Promise<any> {
-    // make request
-    let res = await axios.get(
-      this.rootUrl + "Patient/" + patientID
-    )
+  decodePatients(data: any[]): Patient[] {
+    return data.map(patientResource => {
+      
+      let name = (patientResource.name as any[]).map(nameResource => new Name(nameResource));
+      let gender = patientResource.gender;
+      let birthDate = patientResource.birthDate;
+      let address = (patientResource.address as any[]).map(addressResource => new Address(addressResource));
 
-    // extract patient data
-    let patient = res.data;
+      return new Patient({ name, gender, birthDate, address });
+    });
+  }
 
-    let birthDate = patient.birthDate;
-    let gender = patient.gender;
-    let address = {
-      line: patient.address[0].line,
-      city: patient.address[0].city,
-      state: patient.address[0].state,
-      country: patient.address[0].country
+  async getPractitionerIDs(practitionerIdentifier: Identifier): Promise<string[]> {
+
+    let ids: string[] = [];
+    let nextUrl = `${this.rootUrl}/Practitioner?identifier=${practitionerIdentifier.toString()}&_count=${config.countPerPage}`
+
+    while (nextUrl) {
+      let response = await axios.get(nextUrl);
+      let entries = response.data.entry as Array<any>;
+      ids = ids.concat(entries.map(entry => entry.resource.id));
+      nextUrl = this.extractNextUrl(response.data);
     }
 
+    return ids;
+  }
 
-    // instantiate patientInfo
-    let patientInfo = new PatientInfo(birthDate, gender, address);
+  async getPatientList(practitionerIdentifier: Identifier, progressCallback: (data: Patient[], progress: { loaded: number, total: number }) => void): Promise<Patient[]> {
 
-    return patientInfo;
+    let patientsResource: any[] = [];
+    let ids = await this.getPractitionerIDs(practitionerIdentifier);
+    let nextUrl = `${this.rootUrl}/Patient?_has:Encounter:patient:practitioner=${ids.join(',')}`
+
+    while (nextUrl) {
+      let response = await axios.get(nextUrl);
+      let entries = response.data.entry as Array<any>;
+      patientsResource = patientsResource.concat(entries.map(entry => entry.resource));
+      console.log(patientsResource);
+      nextUrl = this.extractNextUrl(response.data);
+    }
+
+    return this.decodePatients(patientsResource);
   }
 
   async getCholesterol(patientID: string): Promise<any> {
-    // make request
-    let res = await axios.get(
-      this.rootUrl +  "Observation?patient=" + patientID + "&code=2093-3&_sort=-date"
-    )
     
-    let cholesterol;
-    // extract latest observation
-    let totalObs = res.data.total;
-    if (totalObs > 0) {
-      let data = res.data.entry as Array<any>;
-      let latestObs = data[0];
-  
-      // instantiate cholesterol
-      let time = latestObs.resource.effectiveDateTime;
-      let value = latestObs.resource.valueQuantity.value;
-      let unit = latestObs.resource.valueQuantity.unit;
-      cholesterol = new Cholesterol(time, value, unit);
-    } else {
-      cholesterol = null;
-    }
+    let response = await axios.get(
+      `${this.rootUrl}/Observation?patient=${patientID}&code=2093-3&_sort=-date&_count=1`
+    )
+    // TODO: Exception: No entry found (patient having no Observation)
 
+    let observation = response.data.entry[0].resource;
 
-    return cholesterol;
+    let effectiveDateTime = observation.effectiveDateTime;
+    let value = new Measurement(observation.valueQuantity);
+
+    return new Observation(value, effectiveDateTime);
   }
 
 }
