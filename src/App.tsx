@@ -1,13 +1,21 @@
 import React from 'react';
+import { Provider } from 'react-redux'
 import logo from './logo.svg';
 import './App.css';
 
 import Navigation from './components/Navigation';
 import MainContent from './components/MainContent';
 import Sidebar from './components/Sidebar';
+import { Store } from 'redux';
+import { ApplicationState } from './store/index';
 
-function App() {
+interface MainProps {
+  store: Store<ApplicationState>
+}
+
+const App: React.FC<MainProps> = ({ store }) => {
   return (
+    <Provider store={store}>
     <div>
       <Sidebar />
 
@@ -16,6 +24,7 @@ function App() {
       </div>
       
     </div>
+    </Provider>
   );
 }
 
