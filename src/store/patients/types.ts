@@ -2,13 +2,20 @@ import Patient from '../../DataModel/Patient';
 
 // Redux's type convention @@context/ACTION_TYPE
 export enum PatientsActionTypes {
-  FETCH_REQUEST = "@@patients/FETCH",
+  FETCH_REQUEST = "@@patients/FETCH_REQUEST",
   FETCH_PROGRESS = "@@patients/FETCH_PROGRESS",
-  MONITOR_PATIENT = "@@patients/MONITOR",
-  STOP_MONITOR_PATIENT = '@@patients/STOP_MONITOR_PATIENT'
+  FETCH_DONE = "@@patients/FETCH_DONE",
+  TOGGLE_MONITOR_PATIENT = "@@patients/TOGGLE_MONITOR",
+  FETCH_CHOLESTEROL_REQUEST = "@@patients/FETCH_CHOLESTEROL_REQUEST",
+  FETCH_CHOLESTEROL_DONE = "@@patients/FETCH_CHOLESTEROL_DONE",
+}
+
+export interface Progress {
+  loaded: number,
+  total: number | undefined
 }
 
 export interface PatientsState {
-  readonly loading: { loaded: number, total: number } | boolean
+  readonly loading: Progress | boolean
   readonly data: Patient[]
 }
