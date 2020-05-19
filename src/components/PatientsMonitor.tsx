@@ -9,10 +9,23 @@ import { useDispatch } from 'react-redux';
 import { PatientsActionTypes } from "../store/patients/types";
 import { fetchPatientCholesterol } from "../store/patients/actions";
 import { Observation } from '../DataModel/Resource';
+import PatientInfoDialog from "./PatientInfoDialog";
+
+const emptyPatient = new Patient({
+  id: "",
+  name: [],
+  gender: "",
+  birthDate: "",
+  address: [],
+});
 
 export default function PatientsMonitor() {
 
   const dispatch = useDispatch();
+
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const toggleDetailDialog = () => { setDetailDialogOpen(!detailDialogOpen) };
+  const [displayedPatient, setDisplayedPatient] = useState(emptyPatient);
 
   const columns = React.useMemo(
     () => [
@@ -49,7 +62,18 @@ export default function PatientsMonitor() {
   // }
   console.log("rendering select");
 
+  const noDataMessage = "You are not monitoring any patients, add new patients to monitor";
+
   return (
-    <PatientsTable data={data} columns={columns} onClickRow={() => {}} />
+    <div>
+      <PatientInfoDialog
+        patient={displayedPatient}
+        isOpen={detailDialogOpen}
+        toggleOpen={toggleDetailDialog}
+      />
+
+      <PatientsTable data={data} columns={columns} onClickRow={(patient: Patient) => { toggleDetailDialog(); setDisplayedPatient(patient)}} noDataMessage={noDataMessage}/>
+    </div>
+    
   )
 }

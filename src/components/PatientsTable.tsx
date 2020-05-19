@@ -1,15 +1,30 @@
 import React from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
-import { Icon } from '@blueprintjs/core';
+import {
+  Icon,
+  Button,
+  NumericInput,
+  ControlGroup,
+  FormGroup,
+  Tag,
+} from '@blueprintjs/core';
 import { useState } from 'react';
 import PatientInfoDialog from './PatientInfoDialog';
 import Patient from '../DataModel/Patient';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store';
 
-function PatientsTable({columns, data, onClickRow} : {columns: any[], data: Patient[], onClickRow: (row: Patient) => void}) {
-
-  const loading = false;
+function PatientsTable({
+  columns,
+  data,
+  onClickRow,
+  noDataMessage
+}: {
+  columns: any[];
+  data: Patient[];
+  onClickRow: (row: Patient) => void;
+  noDataMessage: string
+}) {
 
   const {
     getTableProps,
@@ -26,20 +41,19 @@ function PatientsTable({columns, data, onClickRow} : {columns: any[], data: Pati
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize }
-
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
       data,
       initialState: { pageIndex: 0 },
-      autoResetPage: false
+      autoResetPage: false,
     },
     useSortBy,
     usePagination
   );
 
-  console.log("rendering table");
+  console.log('rendering table');
 
   return (
     <div>
@@ -88,66 +102,68 @@ function PatientsTable({columns, data, onClickRow} : {columns: any[], data: Pati
             })}
 
             <tr>
-              {loading ? (
-                // Use our custom loading state to show a loading indicator
-                <td colSpan={columns.length}>Loading...</td>
-              ) : (
-                <td colSpan={columns.length}>
-                  Showing {page.length} of {data.length} results
-                </td>
-              )}
+              <td colSpan={columns.length}>
+                { data.length === 0 ? noDataMessage : `Showing ${page.length} of ${data.length} results`}
+              </td>
             </tr>
           </tbody>
         </table>
 
-        <div className="pagination">
-          <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-            {'<<'}
-          </button>{' '}
-          <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-            {'<'}
-          </button>{' '}
-          <button onClick={() => nextPage()} disabled={!canNextPage}>
-            {'>'}
-          </button>{' '}
-          <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-            {'>>'}
-          </button>{' '}
-          <span>
-            Page{' '}
-            <strong>
-              {pageIndex + 1}/{pageOptions.length}
-            </strong>{' '}
-          </span>
-          <span>
-            | Go to page:{' '}
-            <input
-              type="number"
-              defaultValue={pageIndex + 1}
-              onChange={e => {
-                const page = e.target.value ? Number(e.target.value) - 1 : 0
-                gotoPage(page)
+        <ControlGroup fill={true} className="pagination-toolbar">
+          <div>
+            <Button
+              icon="double-chevron-left"
+              onClick={() => gotoPage(0)}
+              disabled={!canPreviousPage}
+            />{' '}
+            <Button
+              icon="chevron-left"
+              onClick={() => previousPage()}
+              disabled={!canPreviousPage}
+            />{' '}
+            <Button
+              icon="chevron-right"
+              onClick={() => nextPage()}
+              disabled={!canNextPage}
+            />{' '}
+            <Button
+              icon="double-chevron-right"
+              onClick={() => gotoPage(pageCount - 1)}
+              disabled={!canNextPage}
+            />{' '}
+          </div>
+
+          <FormGroup inline={true} label="Page">
+            <NumericInput
+              min={1}
+              max={pageOptions.length ? pageOptions.length : 1}
+              value={pageIndex + 1}
+              rightElement={<Tag minimal={true}>of {pageOptions.length}</Tag>}
+              onValueChange={(valueAsNumber: number) => {
+                const page = valueAsNumber - 1;
+                gotoPage(page);
               }}
-              style={{ width: '100px' }}
+              style={{ width: '80px' }}
             />
-          </span>{' '}
-          <select
-            value={pageSize}
-            onChange={e => {
-              setPageSize(Number(e.target.value))
-            }}
-          >
-            {[10, 20, 30, 40, 50].map(pageSize => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </select>
-        </div>
+          </FormGroup>
 
+          <div className="bp3-html-select">
+            <select
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+              }}
+            >
+              {[10, 20, 50, 100].map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  Show {pageSize}
+                </option>
+              ))}
+            </select>
+            <Icon icon="caret-down" />
+          </div>
+        </ControlGroup>
       </div>
-
-
     </div>
   );
 }

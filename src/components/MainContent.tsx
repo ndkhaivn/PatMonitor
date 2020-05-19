@@ -18,9 +18,9 @@ export default function MainContent() {
 
   // const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
 
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+
   const [selectDialogOpen, setSelectDialogOpen] = useState(false);
-  const toggleDetailDialog = () => { setDetailDialogOpen(!detailDialogOpen) };
+  
   const toggleSelectDialog = () => { setSelectDialogOpen(!selectDialogOpen) };
   const loading: Progress | boolean = useSelector((state: ApplicationState) => state.patients.loading);
 
@@ -33,7 +33,6 @@ export default function MainContent() {
     
 
   const dispatch = useDispatch();
-  
 
   useEffect(() => {
     dispatch(fetchPatients(new Identifier("http://hl7.org/fhir/sid/us-npi", "500")));
@@ -53,11 +52,6 @@ export default function MainContent() {
           
         </Navbar.Group>
       </Navbar>
-
-      <PatientInfoDialog
-        isOpen={detailDialogOpen}
-        toggleOpen={toggleDetailDialog}
-      />
 
       <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
 

@@ -1,13 +1,28 @@
 import React from 'react';
 import { Dialog, Classes, Button, Intent } from '@blueprintjs/core';
+import Patient from '../DataModel/Patient';
+import { useDispatch } from 'react-redux';
+import { PatientsActionTypes } from '../store/patients/types';
 
 
-export default function PatientInfoDialog({ isOpen, toggleOpen }: { isOpen: boolean, toggleOpen: () => void }) {
+export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isOpen: boolean, toggleOpen: () => void, patient: Patient }) {
+
+  // TODO: Patient doesn't have address
+  const address = patient.address ? patient.address[0] : undefined;
+  const dispatch = useDispatch();
+
+  const stopMonitoring = () => {
+    dispatch({
+      type: PatientsActionTypes.TOGGLE_MONITOR_PATIENT,
+      patientId: patient.id
+    });
+    toggleOpen();
+  };
+
   return (
     <Dialog
       icon="pulse"
       onClose={toggleOpen}
-      // onOpening={toggleOpen}
       title="Patient Info"
       isOpen={isOpen}
       canOutsideClickClose={true}
@@ -20,35 +35,34 @@ export default function PatientInfoDialog({ isOpen, toggleOpen }: { isOpen: bool
           <tbody>
             <tr>
               <td> ID </td>
-              <td> 2362364 </td>
+              <td> {patient.id} </td>
             </tr> 
             <tr>
               <td> Full name </td>
-              <td> John Doe </td>
+              <td> {patient.name[0]?.toString()} </td>
             </tr>
             <tr>
               <td> Gender </td>
-              <td> Male </td>
+              <td> {patient.gender} </td>
             </tr>
             <tr>
               <td> Date of Birth </td>
-              <td> 15/08/1989 </td>
+              <td> {patient.birthDate} </td>
             </tr>
             <tr>
               <td> Address </td>
-              <td> Unit 1, 1 Chester Avenue <br/> Clayton 3168 <br/> Victoria, Australia </td>
+              <td> {address?.line.join(" ")}, <br/> {address?.city} {address?.postalCode}, <br/> {address?.state}, {address?.country} </td>
             </tr>
 
           </tbody>
-          {/* <b> Full name </b>
-          <span> John Doe </span> */}
+
         </table>
 
       </div>
 
       <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button intent={Intent.DANGER} onClick={() => {}}>Stop Monitoring</Button>
+            <Button intent={Intent.DANGER} onClick={stopMonitoring}>Stop Monitoring</Button>
           </div>
       </div>
 

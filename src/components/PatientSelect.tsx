@@ -54,8 +54,9 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
   );
 
   const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+  const noDataMessage = "No patients have been fetched yet. Please try again in a moment!";
 
-  const tableMarkup = <PatientsTable columns={columns} data={data} onClickRow={handleClickPatient}/>;
+  const tableMarkup = <PatientsTable columns={columns} data={data} onClickRow={handleClickPatient} noDataMessage={noDataMessage}/>;
 
   // const filterPatient = (patients: Patient[], query: string) => {
   //   if (!patients) {
