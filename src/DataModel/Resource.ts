@@ -38,6 +38,10 @@ export class Name {
     this.prefix = nameObj.prefix;
     this.use = nameObj.use;
   }
+
+  toString(): String {
+    return `${this.prefix ? this.prefix.join(" ") : ""} ${this.given ? this.given.join(" ") : ""} ${this.family}`;
+  }
 }
 
 export class Measurement {
@@ -47,6 +51,10 @@ export class Measurement {
   constructor(measurementObj: any) {
     this.value = measurementObj.value;
     this.unit = measurementObj.unit;
+  }
+
+  toString(): String {
+    return this.value + " " + this.unit;
   }
 }
 

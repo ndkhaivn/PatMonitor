@@ -7,6 +7,7 @@ import Patient from '../DataModel/Patient';
 import PatientsTable from "./PatientsTable";
 import { useDispatch } from 'react-redux';
 import { PatientsActionTypes } from "../store/patients/types";
+import { fetchPatientCholesterol } from "../store/patients/actions";
 
 export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean, toggleOpen: () => void }) {
 
@@ -19,6 +20,9 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
       type: PatientsActionTypes.TOGGLE_MONITOR_PATIENT,
       patientId: patient.id
     });
+
+    dispatch(fetchPatientCholesterol(patient.id));
+
   }
 
   const columns = React.useMemo(
@@ -49,7 +53,9 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
     []
   );
 
-  const tableMarkup = <PatientsTable columns={columns} onClickRow={handleClickPatient}/>;
+  const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+
+  const tableMarkup = <PatientsTable columns={columns} data={data} onClickRow={handleClickPatient}/>;
 
   // const filterPatient = (patients: Patient[], query: string) => {
   //   if (!patients) {

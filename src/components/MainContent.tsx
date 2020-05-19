@@ -4,36 +4,19 @@ import PatientSelect from './PatientSelect'
 import PatientsTable from './PatientsTable';
 import { useDispatch, useSelector } from "react-redux"
 
-import { fetchPatients } from '../store/patients/actions';
+import { fetchPatients, fetchPatientCholesterol } from '../store/patients/actions';
 import { Identifier, Observation } from '../DataModel/Resource';
 import Patient from '../DataModel/Patient';
 import { ApplicationState } from '../store/index';
 import { Progress } from '../store/patients/types';
 import PatientInfoDialog from './PatientInfoDialog';
+import PatientsMonitor from './PatientsMonitor';
 
 
 
 export default function MainContent() {
 
   // const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
-
-  const columns = React.useMemo(
-    () => [
-      {
-        Header: 'Name',
-        accessor: (patient: Patient)  => { return patient.name[0].toString() },
-      },
-      {
-        Header: 'Total Cholesterol',
-        accessor: (patient: Patient)  => { return patient.totalCholesterol?.value.toString() },
-      },
-      {
-        Header: 'Time',
-        accessor: (patient: Patient)  => { return patient.totalCholesterol?.effectiveDateTime },
-      },
-    ],
-    []
-  );
 
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [selectDialogOpen, setSelectDialogOpen] = useState(false);
@@ -78,7 +61,7 @@ export default function MainContent() {
 
       <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
 
-      {/* <PatientsTable columns={columns} onClickRow={toggleDetailDialog}/> */}
+      <PatientsMonitor />
       <i id="last-updated" className="bp3-text-muted">
         Last updated: 13/05/2020 19:30{' '}
       </i>

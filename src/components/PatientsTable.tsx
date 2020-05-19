@@ -7,9 +7,7 @@ import Patient from '../DataModel/Patient';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store';
 
-function PatientsTable({columns, onClickRow} : {columns: any[], onClickRow: (row: Patient) => void}) {
-
-  const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+function PatientsTable({columns, data, onClickRow} : {columns: any[], data: Patient[], onClickRow: (row: Patient) => void}) {
 
   const loading = false;
 
@@ -34,7 +32,8 @@ function PatientsTable({columns, onClickRow} : {columns: any[], onClickRow: (row
     {
       columns,
       data,
-      initialState: { pageIndex: 2 }
+      initialState: { pageIndex: 0 },
+      autoResetPage: false
     },
     useSortBy,
     usePagination
@@ -91,9 +90,9 @@ function PatientsTable({columns, onClickRow} : {columns: any[], onClickRow: (row
             <tr>
               {loading ? (
                 // Use our custom loading state to show a loading indicator
-                <td colSpan={5}>Loading...</td>
+                <td colSpan={columns.length}>Loading...</td>
               ) : (
-                <td colSpan={5}>
+                <td colSpan={columns.length}>
                   Showing {page.length} of {data.length} results
                 </td>
               )}

@@ -1,7 +1,4 @@
-import { checkServerIdentity } from 'tls';
-import DataSource from './DataSource';
-import Cholesterol from './Cholesterol';
-import { Name, Address } from './Resource';
+import { Name, Address, Observation } from './Resource';
 
 export default class Patient {
   id: string
@@ -10,6 +7,8 @@ export default class Patient {
   birthDate: string
   address: Address[]
   isMonitored: boolean;
+  totalCholesterol: Observation | undefined | null;
+  loading: boolean;
 
   constructor(patientObj: any) {
     this.id = patientObj.id;
@@ -18,5 +17,6 @@ export default class Patient {
     this.birthDate = patientObj.birthDate;
     this.address = patientObj.address;
     this.isMonitored = false;
+    this.loading = false;
   }
 }
