@@ -102,8 +102,8 @@ function PatientsTable({
             })}
 
             <tr>
-              <td colSpan={columns.length}>
-                { data.length === 0 ? noDataMessage : `Showing ${page.length} of ${data.length} results`}
+              <td colSpan={columns.length} style={{ textAlign: "center" }}>
+                { data.length === 0 ? noDataMessage : `Showing ${pageIndex*pageSize + 1} to ${pageIndex*pageSize + page.length} of ${data.length} results`}
               </td>
             </tr>
           </tbody>
