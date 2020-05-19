@@ -26,7 +26,6 @@
 /* Toolbar */
 .toolbar {
   background-color: #EBF1F5;
-  color: white;
 }
 
 #patient-table table{
@@ -88,4 +87,9 @@
 #last-updated {
   float: right;
   padding-right: 10px;
+}
+
+.progress {
+  padding-left: 5px;
+  padding-right: 5px;
 }
