@@ -14,13 +14,15 @@ export default class FHIRServer implements DataSource {
     this.rootUrl = config.fihrRootUrl;
   }
 
-  extractNextUrl(data: any) {
+  // Private method
+  private extractNextUrl(data: any) {
     let linkArr = data.link as Array<any>;
     let link = linkArr.find(linkObj => linkObj.relation === "next");
     return link ? link.url : null;
   }
 
-  decodePatients(data: any[]): Patient[] {
+  // Private method
+  private decodePatients(data: any[]): Patient[] {
     return data.map(patientResource => {
       
       let id = patientResource.id;
