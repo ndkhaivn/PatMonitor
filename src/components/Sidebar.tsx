@@ -7,11 +7,11 @@ import { Identifier } from "../DataModel/Resource";
 
 export default function Sidebar() {
 
-  const [practitionerID, setPractitionerID] = useState("");
+  const [practitionerIdentifier, setPractitionerIdentifier] = useState("");
 
   const dispatch = useDispatch();
   const enterPractitioner = () => {
-    dispatch(fetchPatients(new Identifier("http://hl7.org/fhir/sid/us-npi", "500")));
+    dispatch(fetchPatients(new Identifier("http://hl7.org/fhir/sid/us-npi", practitionerIdentifier)));
   }
 
   return (
@@ -21,9 +21,9 @@ export default function Sidebar() {
       <InputGroup
         leftIcon="diagnosis"
         rightElement={<Button icon="key-enter" minimal={true} onClick={enterPractitioner}/>}
-        onChange={(event: any) => setPractitionerID(event.target.value)}
+        onChange={(event: any) => setPractitionerIdentifier(event.target.value)}
         placeholder="Practitioner Identifier"
-        value={practitionerID}
+        value={practitionerIdentifier}
         large={true}
       />
 
