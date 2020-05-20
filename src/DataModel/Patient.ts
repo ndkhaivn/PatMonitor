@@ -8,7 +8,7 @@ export default class Patient {
   address: Address[]
   isMonitored: boolean;
   totalCholesterol: Observation | undefined | null;
-  loading: boolean;
+  cholesterolLoading: boolean;
 
   constructor(patientObj: any) {
     this.id = patientObj.id;
@@ -17,6 +17,6 @@ export default class Patient {
     this.birthDate = patientObj.birthDate;
     this.address = patientObj.address;
     this.isMonitored = false;
-    this.loading = false;
+    this.cholesterolLoading = false;
   }
 }

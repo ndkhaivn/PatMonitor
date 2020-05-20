@@ -31,13 +31,13 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
     case PatientsActionTypes.FETCH_CHOLESTEROL_REQUEST: {
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      newData[idx].loading = true;
+      newData[idx].cholesterolLoading = true;
       return { ...state, data: newData };
     }
     case PatientsActionTypes.FETCH_CHOLESTEROL_DONE: {
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      newData[idx].loading = false;
+      newData[idx].cholesterolLoading = false;
       newData[idx].totalCholesterol = action.payload;
       return { ...state, data: newData };
     }

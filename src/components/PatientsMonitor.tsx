@@ -35,8 +35,8 @@ export default function PatientsMonitor() {
       },
       {
         Header: 'Total Cholesterol',
-        accessor: (patient: Patient)  => { return patient.totalCholesterol },
-        Cell: ({ value }: { value: Observation | null | undefined }) => value ? value.value.toString() : value === null ? "N/A" : <Spinner size={Spinner.SIZE_SMALL} /> 
+        accessor: (patient: Patient)  => { return patient },
+        Cell: ({ value }: { value: Patient }) => value.cholesterolLoading ? <Spinner size={Spinner.SIZE_SMALL} /> : value.totalCholesterol === null ? "N/A" : value.totalCholesterol?.value.toString()
       },
       {
         Header: 'Time',

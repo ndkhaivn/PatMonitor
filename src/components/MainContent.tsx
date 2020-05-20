@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Navbar, Alignment, Button, Spinner, AnchorButton } from '@blueprintjs/core'
+import { Navbar, Alignment, Button, Spinner, AnchorButton, NumericInput, Position, Tag, ControlGroup } from '@blueprintjs/core'
 import PatientSelect from './PatientSelect'
 import PatientsTable from './PatientsTable';
 import { useDispatch, useSelector } from "react-redux"
@@ -11,6 +11,7 @@ import { ApplicationState } from '../store/index';
 import { Progress } from '../store/patients/types';
 import PatientInfoDialog from './PatientInfoDialog';
 import PatientsMonitor from './PatientsMonitor';
+import { setCholesterolTimer } from '../store/system/actions';
 
 
 
@@ -20,6 +21,7 @@ export default function MainContent() {
 
 
   const [selectDialogOpen, setSelectDialogOpen] = useState(false);
+  const [reloadTimeout, setReloadTimeout] = useState(5);
   
   const toggleSelectDialog = () => { setSelectDialogOpen(!selectDialogOpen) };
   const loading: Progress | boolean = useSelector((state: ApplicationState) => state.patients.loading);
@@ -46,19 +48,30 @@ export default function MainContent() {
         <Navbar.Group>
 
         <AnchorButton text="Patient" icon="plus" onClick={toggleSelectDialog}/>
+        {loadingMarkup}
+          
+        </Navbar.Group>
+          
+        <Navbar.Group align={Alignment.RIGHT}> 
+          <ControlGroup>
+            <NumericInput 
+              buttonPosition={Position.LEFT} 
+              rightElement={<Tag minimal={true}>s</Tag>}
+              onValueChange={(value) => setReloadTimeout(value)}
+              value={reloadTimeout}
+            />
+            <Button icon="stopwatch" onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
+          </ControlGroup>
 
-          {loadingMarkup}
-          
-          
         </Navbar.Group>
       </Navbar>
 
       <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
 
       <PatientsMonitor />
-      <i id="last-updated" className="bp3-text-muted">
+      {/* <i id="last-updated" className="bp3-text-muted">
         Last updated: 13/05/2020 19:30{' '}
-      </i>
+      </i> */}
 
     </div>
   );
