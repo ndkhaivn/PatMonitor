@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react"
-import { MenuItem, Label, InputGroup, Dialog, Icon } from "@blueprintjs/core";
+import { MenuItem, Label, InputGroup, Dialog, Icon, Spinner } from "@blueprintjs/core";
 import { Select, ItemRenderer, MultiSelect } from "@blueprintjs/select";
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
@@ -10,8 +10,6 @@ import { PatientsActionTypes } from "../store/patients/types";
 import { fetchPatientCholesterol } from "../store/patients/actions";
 
 export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean, toggleOpen: () => void }) {
-
-  // const [query, setQuery] = useState("")
 
   const dispatch = useDispatch();
 
@@ -53,27 +51,19 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
     []
   );
 
+  const loading = useSelector((state: ApplicationState) => state.patients.loading);
   const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
-  const noDataMessage = "No patients have been fetched yet. Please try again in a moment!";
+  const noDataMessage = "No patients found!";
 
   const tableMarkup = <PatientsTable columns={columns} data={data} onClickRow={handleClickPatient} noDataMessage={noDataMessage}/>;
+  const iconMarkup = loading ? <div className="spinner"><Spinner size={Spinner.SIZE_SMALL} /> </div> : "pulse"
 
-  // const filterPatient = (patients: Patient[], query: string) => {
-  //   if (!patients) {
-  //     return []
-  //   }
-
-  //   return patients.filter((patient: Patient) => {
-  //     const normalizedName = patient.name[0].toString().toLowerCase();
-  //     const normalizedQuery = query.toLowerCase();
-  //     return normalizedName.indexOf(normalizedQuery) >= 0;
-  //   });
-  // }
   console.log("rendering select");
 
   return (
     <Dialog
-      title="Monitor new patient"
+      icon={iconMarkup}
+      title={" Monitor new patient"}
       isOpen={isOpen}
       canOutsideClickClose={true}
       canEscapeKeyClose={true}

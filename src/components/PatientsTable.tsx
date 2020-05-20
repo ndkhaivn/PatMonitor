@@ -90,6 +90,7 @@ function PatientsTable({
               return (
                 <tr
                   {...row.getRowProps()}
+                  key={row.original.id}
                   onClick={() => onClickRow(row.original)}
                 >
                   {row.cells.map((cell) => {

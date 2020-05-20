@@ -18,10 +18,11 @@ import { setCholesterolTimer } from '../store/system/actions';
 export default function MainContent() {
 
   // const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
-
-
+  
   const [selectDialogOpen, setSelectDialogOpen] = useState(false);
   const [reloadTimeout, setReloadTimeout] = useState(5);
+
+  const dispatch = useDispatch();
   
   const toggleSelectDialog = () => { setSelectDialogOpen(!selectDialogOpen) };
   const loading: Progress | boolean = useSelector((state: ApplicationState) => state.patients.loading);
@@ -32,15 +33,6 @@ export default function MainContent() {
       <div className="progress"> <Spinner size={Spinner.SIZE_SMALL} /> </div>,
       <div className="progress"> Loading... ({(loading as Progress).loaded ?? 0}{(loading as Progress).total ? "/" + (loading as Progress).total : ""})</div>
     ]
-    
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchPatients(new Identifier("http://hl7.org/fhir/sid/us-npi", "500")));
-  }, []);
-  
-  console.log("re-rendering main content");
 
   return (
     <div className="main-content">
