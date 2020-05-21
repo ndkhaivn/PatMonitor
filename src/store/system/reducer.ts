@@ -18,4 +18,4 @@ const reducer: Reducer<SystemState> = (state = initialState, action) => {
   }
 }
 
-export { reducer as patientsReducer }
+export { reducer as systemReducer }
