@@ -22,6 +22,10 @@ export const fetchPatients = (practitionerIdentifier: Identifier): AppThunk<void
   }
 
   dispatch({
+    type: PatientsActionTypes.CLEAR_PATIENTS
+  });
+
+  dispatch({
     type: PatientsActionTypes.FETCH_REQUEST
   });
 

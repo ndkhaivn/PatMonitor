@@ -22,6 +22,9 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
     case PatientsActionTypes.FETCH_DONE: {
       return { ...state, loading: false }
     }
+    case PatientsActionTypes.CLEAR_PATIENTS: {
+      return initialState
+    }
     case PatientsActionTypes.TOGGLE_MONITOR_PATIENT: {
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
