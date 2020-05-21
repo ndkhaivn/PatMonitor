@@ -1,0 +1,23 @@
+1. Duplicate patient list can be added
+	Reproduce: Add practitioner 500 five times
+	Status: Fixed
+
+2. Patient list is not reset when new practitioner added
+	Reproduce:
+		1.	Add practitioner 500
+		2.	Add practitioner 300
+	Status: Fixed
+
+3. Refresh timer is not reset when new timer added
+	Reproduce:
+		1.	Add 2s timer 5 times
+		2.	Change timer to 15s 
+	Status: Fixed
+
+4. Enter button does not work with add practitioner (UX)
+	Reproduce: Enter practitioner identifier and press enter
+	Status: Open
+
+5. Does not handle invalid practitioner identifier
+	Reproduce: Add practitioner identifier: 32312321
+	Status: Open
