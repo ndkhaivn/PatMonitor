@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react"
-import { MenuItem, Label, InputGroup, Dialog, Icon, Spinner } from "@blueprintjs/core";
+import { MenuItem, Label, InputGroup, Dialog, Icon, Spinner, Intent } from "@blueprintjs/core";
 import { Select, ItemRenderer, MultiSelect } from "@blueprintjs/select";
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
@@ -27,6 +27,29 @@ export default function PatientsMonitor() {
   const toggleDetailDialog = () => { setDetailDialogOpen(!detailDialogOpen) };
   const [displayedPatient, setDisplayedPatient] = useState(emptyPatient);
 
+  let patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+  patients = patients.filter(patient => patient.isMonitored === true);
+
+  let sumCholesterol = 0;
+  let effectivePatientsCount = 0;
+  patients.forEach(patient => {
+    if (patient.totalCholesterol?.value) {
+      sumCholesterol += patient.totalCholesterol.value.value;
+      effectivePatientsCount++;
+    }
+  });
+  const averageCholesterol = effectivePatientsCount ? sumCholesterol/effectivePatientsCount : null;
+
+  const isAboveAverageCholesterol = (patient: Patient): boolean => {
+    if (!averageCholesterol || !(patient.totalCholesterol?.value.value)) { // if average or cholesterol value not found
+      return false;
+    } else {
+      return patient.totalCholesterol?.value.value > averageCholesterol;
+    }
+  }
+
+  const warningMarkup = <Icon icon="warning-sign" intent={Intent.WARNING}/>
+
   const columns = React.useMemo(
     () => [
       {
@@ -36,18 +59,18 @@ export default function PatientsMonitor() {
       {
         Header: 'Total Cholesterol',
         accessor: (patient: Patient)  => { return patient },
-        Cell: ({ value }: { value: Patient }) => value.cholesterolLoading ? <Spinner size={Spinner.SIZE_SMALL} /> : value.totalCholesterol === null ? "N/A" : value.totalCholesterol?.value.toString()
+        Cell: ({ value }: { value: Patient }) => 
+          value.cholesterolLoading ? 
+            <Spinner size={Spinner.SIZE_SMALL} /> : 
+            value.totalCholesterol === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.totalCholesterol?.value.toString()]
       },
       {
         Header: 'Time',
         accessor: (patient: Patient)  => { return patient.totalCholesterol?.effectiveDateTime },
       },
     ],
-    []
+    [averageCholesterol]
   );
-
-  let data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
-  data = data.filter(patient => patient.isMonitored === true);
 
   // const filterPatient = (patients: Patient[], query: string) => {
   //   if (!patients) {
@@ -72,7 +95,7 @@ export default function PatientsMonitor() {
         toggleOpen={toggleDetailDialog}
       />
 
-      <PatientsTable data={data} columns={columns} onClickRow={(patient: Patient) => { toggleDetailDialog(); setDisplayedPatient(patient)}} noDataMessage={noDataMessage}/>
+      <PatientsTable data={patients} columns={columns} onClickRow={(patient: Patient) => { toggleDetailDialog(); setDisplayedPatient(patient)}} noDataMessage={noDataMessage}/>
     </div>
     
   )
