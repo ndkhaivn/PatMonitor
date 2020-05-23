@@ -39,7 +39,7 @@ export class Name {
     this.use = nameObj.use;
   }
 
-  toString(): String {
+  toString(): string {
     return `${this.prefix ? this.prefix.join(" ") : ""} ${this.given ? this.given.join(" ") : ""} ${this.family}`;
   }
 }
@@ -53,7 +53,7 @@ export class Measurement {
     this.unit = measurementObj.unit;
   }
 
-  toString(): String {
+  toString(): string {
     return this.value + " " + this.unit;
   }
 }
