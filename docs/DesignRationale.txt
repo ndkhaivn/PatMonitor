@@ -1,0 +1,9 @@
+DESIGN RATIONALE
+
+Redux Store[1]: This is a state container for the whole app. The store is not actually a class, it is an object with methods for accessing and mutating the store. There is only one store instance (a singleton[2])
+In this app, the store plays as a data provider, while the components (UI views) are the observers that subscribes to the store. Any changes to the store's state will trigger updates in the views. The views also can dispatch changes to the store (called actions)
+
+
+Reference:
+[1] https://redux.js.org/api/store
+[2] Head First Design Patterns: A Brain-Friendly Guide
