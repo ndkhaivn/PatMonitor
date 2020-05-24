@@ -1,13 +1,14 @@
 import Patient from "./Patient";
 import { Identifier, Observation } from './Resource';
 import { Progress } from "../store/patients/types";
+import FHIRServer from './FHIRServer';
 /**
  *Interface that represents data source which stores the medical records
  *
  * @export
  * @interface DataSource
  */
-export default interface DataSource {
+export interface DataSource {
     /**
      * Fetches an array of all associated IDs of a target practitioner
      *
@@ -36,3 +37,6 @@ export default interface DataSource {
      */
     getCholesterol(patientID: string): Promise<Observation | null>;
 }
+
+// Creating and exporting the dataSource instance - a DataSource singleton for the whole app
+export const dataSource: DataSource = new FHIRServer();

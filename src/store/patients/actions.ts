@@ -1,14 +1,12 @@
 import { ThunkAction } from 'redux-thunk';
 import { AnyAction } from "redux";
 import Practitioner from '../../DataModel/Practitioner';
-import DataSource from '../../DataModel/DataSource';
+import { dataSource } from '../../DataModel/DataSource';
 import FHIRServer from '../../DataModel/FHIRServer';
 import { PatientsActionTypes, Progress } from './types';
 import Patient from '../../DataModel/Patient';
 import { AppThunk } from '..';
 import { Identifier, Observation } from '../../DataModel/Resource';
-
-const dataSource: DataSource = new FHIRServer();
 
 export const fetchPatients = (practitionerIdentifier: Identifier): AppThunk<void> => async (dispatch) => {
 
