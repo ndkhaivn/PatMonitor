@@ -1,5 +1,10 @@
 import { Name, Address, Observation } from './Resource';
-
+/**
+ * Class that represents a Patient in the medical record system
+ *
+ * @export
+ * @class Patient
+ */
 export default class Patient {
   id: string
   name: Name[]
@@ -10,12 +15,21 @@ export default class Patient {
   totalCholesterol: Observation | undefined | null;
   cholesterolLoading: boolean;
 
-  constructor(patientObj: any) {
-    this.id = patientObj.id;
-    this.name = patientObj.name;
-    this.gender = patientObj.gender;
-    this.birthDate = patientObj.birthDate;
-    this.address = patientObj.address;
+  /**
+   *Creates an instance of Patient.
+   * @param {string} newId unique ID associated with Patient
+   * @param {Name[]} newName Name of Patient
+   * @param {string} newGender string representing gender of Patient
+   * @param {string} newBirthDate string representing birth date of Patient
+   * @param {Address[]} newAddress Address of Patient
+   * @memberof Patient
+   */
+  constructor(newId: string, newName: Name[], newGender: string, newBirthDate: string, newAddress:Address[]) {
+    this.id = newId;
+    this.name = newName;
+    this.gender = newGender;
+    this.birthDate = newBirthDate;
+    this.address = newAddress;
     this.isMonitored = false;
     this.cholesterolLoading = false;
   }

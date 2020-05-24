@@ -17,12 +17,12 @@ export class Address {
   postalCode: string
   country: string
 
-  constructor(addressObj: any) {
-    this.line = addressObj.line;
-    this.city = addressObj.city;
-    this.state = addressObj.state;
-    this.postalCode = addressObj.postalCode;
-    this.country = addressObj.country;
+  constructor(newLine: string[], newCity: string, newState: string, newPostalCode: string, newCountry: string) {
+    this.line = newLine;
+    this.city = newCity;
+    this.state = newState;
+    this.postalCode = newPostalCode;
+    this.country = newCountry;
   }
 }
 
@@ -32,14 +32,15 @@ export class Name {
   prefix: string[]
   use: string
 
-  constructor(nameObj: any) {
-    this.family = nameObj.family;
-    this.given = nameObj.given;
-    this.prefix = nameObj.prefix;
-    this.use = nameObj.use;
+  constructor(newFamily: string, newGiven: string[], newPrefix: string[], newUse: string) {
+    this.family = newFamily;
+    this.given = newGiven;
+    this.prefix = newPrefix;
+    this.use = newUse;
+
   }
 
-  toString(): String {
+  toString(): string {
     return `${this.prefix ? this.prefix.join(" ") : ""} ${this.given ? this.given.join(" ") : ""} ${this.family}`;
   }
 }
@@ -48,12 +49,12 @@ export class Measurement {
   unit: string
   value: number
 
-  constructor(measurementObj: any) {
-    this.value = measurementObj.value;
-    this.unit = measurementObj.unit;
+  constructor(newUnit: string, newValue: number) {
+    this.unit = newUnit;
+    this.value = newValue;
   }
 
-  toString(): String {
+  toString(): string {
     return this.value + " " + this.unit;
   }
 }
