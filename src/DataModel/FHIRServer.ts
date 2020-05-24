@@ -38,6 +38,7 @@ export default class FHIRServer implements DataSource {
       return new Patient(id, name, gender, birthDate, address);
     });
   }
+
   /**
    * Fetches an array of all associated IDs of a target practitioner
    *
@@ -74,7 +75,10 @@ export default class FHIRServer implements DataSource {
   async getPatientList(practitionerIdentifier: Identifier, progressCallback: (data: Patient[], progress: Progress) => void): Promise<Patient[]> {
 
     let patients: Patient[] = [];
+    // get all the assiocated IDS to the unique Identifier
     let ids = await this.getPractitionerIDs(practitionerIdentifier);
+
+    // url to find all Patients that have an encounter with the target Practitioner
     let nextUrl = `${this.rootUrl}/Patient?_has:Encounter:patient:practitioner=${ids.join(',')}`
 
     while (nextUrl) {
