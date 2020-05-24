@@ -11,13 +11,7 @@ import { fetchPatientCholesterol } from "../store/patients/actions";
 import { Observation } from '../DataModel/Resource';
 import PatientInfoDialog from "./PatientInfoDialog";
 
-const emptyPatient = new Patient({
-  id: "",
-  name: [],
-  gender: "",
-  birthDate: "",
-  address: [],
-});
+const emptyPatient = new Patient("", [], "", "", []);
 
 export default function PatientsMonitor() {
 
