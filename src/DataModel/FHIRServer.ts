@@ -26,10 +26,10 @@ export default class FHIRServer implements DataSource {
     return data.map(patientResource => {
       
       let id = patientResource.id;
-      let name = (patientResource.name as any[]).map(nameResource => new Name(nameResource));
+      let name = (patientResource.name as any[]).map(nameResource => new Name(nameResource.family, nameResource.given, nameResource.prefix, nameResource.use));
       let gender = patientResource.gender;
       let birthDate = patientResource.birthDate;
-      let address = (patientResource.address as any[]).map(addressResource => new Address(addressResource));
+      let address = (patientResource.address as any[]).map(addressResource => new Address(addressResource.line, addressResource.city, addressResource.state, addressResource.postalCode, addressResource.country));
 
       return new Patient({ id, name, gender, birthDate, address });
     });
@@ -83,7 +83,7 @@ export default class FHIRServer implements DataSource {
     let observation = response.data.entry[0].resource;
 
     let effectiveDateTime = observation.effectiveDateTime;
-    let value = new Measurement(observation.valueQuantity);
+    let value = new Measurement(observation.valueQuantity.unit, observation.valueQuantity.value);
 
     return new Observation(value, effectiveDateTime);
   }
