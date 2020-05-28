@@ -19,7 +19,7 @@ export default class FHIRServer implements DataSource {
     }
 
   // This method takes in an Object and returns a string representing the next url, if it exists
-  private extractNextUrl(data: any): string {
+  private extractNextUrl(data: {link:[]}): string {
     let linkArr = data.link as Array<any>;
     let link = linkArr.find(linkObj => linkObj.relation === "next");
     return link ? link.url : null;
@@ -27,6 +27,7 @@ export default class FHIRServer implements DataSource {
 
   // This method takes in an array of objects and generates a list of Patients from the data
   private decodePatients(data: any[]): Patient[] {
+    console.log(data);
     return data.map(patientResource => {
       // extract required attributes
       let id = patientResource.id;
@@ -120,7 +121,7 @@ export default class FHIRServer implements DataSource {
    * @returns {Promise<any>} returns a promise containing the latest cholesterol reading of the target Patient(if available)
    * @memberof FHIRServer
    */
-  async getCholesterol(patientID: string): Promise<any> {
+  async getCholesterol(patientID: string): Promise<Observation | null> {
     // retrieve the latest cholesterol reading for given patient
     let response = await axios.get(
       `${this.rootUrl}/Observation?patient=${patientID}&code=2093-3&_sort=-date&_count=1`

@@ -36,7 +36,7 @@ export interface DataSource {
      * @returns {Promise<any>} returns a promise containing the latest cholesterol reading of the target Patient(if available)
      * @memberof DataSource
      */
-    getCholesterol(patientID: string): Promise<Observation>;
+    getCholesterol(patientID: string): Promise<Observation | null>;
 }
 
 // Creating and exporting the dataSource instance - a DataSource singleton for the whole app
