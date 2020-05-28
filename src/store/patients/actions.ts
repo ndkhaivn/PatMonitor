@@ -1,6 +1,5 @@
 import { ThunkAction } from 'redux-thunk';
 import { AnyAction } from "redux";
-import Practitioner from '../../DataModel/Practitioner';
 import { dataSource } from '../../DataModel/DataSource';
 import FHIRServer from '../../DataModel/FHIRServer';
 import { PatientsActionTypes, Progress } from './types';
@@ -8,7 +7,7 @@ import Patient from '../../DataModel/Patient';
 import { AppThunk } from '..';
 import { Identifier, Observation } from '../../DataModel/Resource';
 
-export const fetchPatients = (practitionerIdentifier: Identifier): AppThunk<void> => async (dispatch) => {
+export const fetchPatients = (practitionerIDs: string[]): AppThunk<void> => async (dispatch) => {
 
   const progressUpdate = (data: Patient[], progress: Progress) => {
     console.log(progress);
@@ -27,7 +26,7 @@ export const fetchPatients = (practitionerIdentifier: Identifier): AppThunk<void
     type: PatientsActionTypes.FETCH_REQUEST
   });
 
-  await dataSource.getPatientList(practitionerIdentifier, progressUpdate);
+  await dataSource.getPatientList(practitionerIDs, progressUpdate);
 
   dispatch({
     type: PatientsActionTypes.FETCH_DONE

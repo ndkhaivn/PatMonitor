@@ -2,7 +2,7 @@ import { Reducer } from "redux";
 import { PractitionerState, PractitionerActionTypes } from "./types";
 
 export const initialState: PractitionerState = {
-  data: [],
+  data: undefined,
   loading: false
 }
 

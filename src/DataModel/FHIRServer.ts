@@ -1,10 +1,11 @@
-import DataSource from './DataSource';
+import { DataSource } from './DataSource';
 
 import Patient from './Patient';
 import axios from 'axios';
 import config from "../config";
 import { Identifier, Name, Address, Measurement, Observation } from './Resource';
 import { Progress } from '../store/patients/types';
+import { Practitioner, MaybePractitioner } from './Practitioner';
 
 export default class FHIRServer implements DataSource {
 
@@ -39,6 +40,16 @@ export default class FHIRServer implements DataSource {
     });
   }
 
+  private decodePractitioner(data: any[]): Practitioner {
+    let practitionerResource = data[0];
+    let identifier = new Identifier(practitionerResource.identifier.system, practitionerResource.identifier.value)
+    let ids = data.map(practitioner => practitioner.id);
+    let name = (practitionerResource.name as any[]).map(nameResource => new Name(nameResource.family, nameResource.given, nameResource.prefix, nameResource.use));
+    let address = (practitionerResource.address as any[]).map(addressResource => new Address(addressResource.line, addressResource.city, addressResource.state, addressResource.postalCode, addressResource.country));
+    console.log(practitionerResource)
+    return new Practitioner(identifier, ids, name, address);
+  }
+
   /**
    * Fetches an array of all associated IDs of a target practitioner
    *
@@ -46,40 +57,43 @@ export default class FHIRServer implements DataSource {
    * @returns {Promise<string[]>} returns a promise containing an array of all the IDs associated with the target Practitioner
    * @memberof FHIRServer
    */
-  async getPractitionerIDs(practitionerIdentifier: Identifier): Promise<string[]> {
+  async getPractitioner(practitionerIdentifier: Identifier): Promise<MaybePractitioner> {
 
-    let ids: string[] = [];
+    let resources: any[] = [];
     let nextUrl = `${this.rootUrl}/Practitioner?identifier=${practitionerIdentifier.toString()}&_count=${config.countPerPage}`
 
     while (nextUrl) {
       // iterate through each page, adding ids to array
       let response = await axios.get(nextUrl);
       let entries = response.data.entry as Array<any>;
-      ids = ids.concat(entries.map(entry => entry.resource.id));
+      if (!entries) {
+        return null;
+      }
+      resources = resources.concat(entries.map(entry => entry.resource));
 
       // extract next page url
       nextUrl = this.extractNextUrl(response.data);
     }
 
-    return ids;
+    return this.decodePractitioner(resources);
   }
 
   /**
    * Fetches a list of all patients associated with a target Practitioner
    *
-   * @param {Identifier} pracIdentifier unique identifier corresponding to target Practitioner
+   * @param {export} pracIdentifier unique identifier corresponding to target Practitioner
    * @param {(data: Patient[], progress: Progress) => void} progressCallback
    * @returns {Promise<Patient[]>} returns a promise containing an array of all the Patients associated with the target Practitioner
    * @memberof FHIRServer
    */
-  async getPatientList(practitionerIdentifier: Identifier, progressCallback: (data: Patient[], progress: Progress) => void): Promise<Patient[]> {
+  async getPatientList(practitionerIDs: string[], progressCallback: (data: Patient[], progress: Progress) => void): Promise<Patient[]> {
 
     let patients: Patient[] = [];
     // get all the assiocated IDS to the unique Identifier
-    let ids = await this.getPractitionerIDs(practitionerIdentifier);
+    let ids = practitionerIDs.join(',');
 
     // url to find all Patients that have an encounter with the target Practitioner
-    let nextUrl = `${this.rootUrl}/Patient?_has:Encounter:patient:practitioner=${ids.join(',')}`
+    let nextUrl = `${this.rootUrl}/Patient?_has:Encounter:patient:practitioner=${ids}`
 
     while (nextUrl) {
       // iterate through each page, adding new patients to array

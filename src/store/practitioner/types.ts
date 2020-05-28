@@ -1,4 +1,4 @@
-import Practitioner from '../../DataModel/Practitioner';
+import { MaybePractitioner } from '../../DataModel/Practitioner';
 
 // Redux's type convention @@context/ACTION_TYPE
 export enum PractitionerActionTypes {
@@ -8,5 +8,5 @@ export enum PractitionerActionTypes {
 
 export interface PractitionerState {
   readonly loading: boolean
-  readonly data: Practitioner[]
+  readonly data: MaybePractitioner
 }

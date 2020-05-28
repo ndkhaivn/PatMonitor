@@ -1,9 +1,17 @@
-import DataSource from "./DataSource";
+import { Identifier, Name, Address } from './Resource';
 
-export default class Practitioner {
-  identifier: string;
+export class Practitioner {
+  identifier: Identifier
+  ids: string[]
+  name: Name[]
+  address: Address[]
 
-  constructor(identifier: string) {
+  constructor(identifier: Identifier, ids: string[], name: Name[], address: Address[]) {
     this.identifier = identifier;
+    this.ids = ids;
+    this.name = name;
+    this.address = address;
   }
 }
+
+export type MaybePractitioner = Practitioner | undefined | null;

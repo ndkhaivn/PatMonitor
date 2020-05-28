@@ -3,7 +3,6 @@ import { Provider } from 'react-redux'
 import logo from './logo.svg';
 import './App.css';
 
-import Navigation from './components/Navigation';
 import MainContent from './components/MainContent';
 import Sidebar from './components/Sidebar';
 import { Store } from 'redux';
