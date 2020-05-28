@@ -14,14 +14,15 @@ export interface DataSource {
      * Fetches an array of all associated IDs of a target practitioner
      *
      * @param {Identifier} practitionerIdentifier unique identifier corresponding to target Practitioner
-     * @returns {Promise<string[]>} returns a promise containing an array of all the IDs associated with the target Practitioner
+     * @returns {Promise<MaybePractitioner>} returns a promise containing a MaybePractitioner that can take the form of a Practitioner if found, undefined if not fetched and null if not found
      * @memberof DataSource
      */
     getPractitioner(practitionerIdentifier: Identifier): Promise<MaybePractitioner>
+
     /**
      * Fetches a list of all patients associated with a target Practitioner
      *
-     * @param {Identifier} pracIdentifier unique identifier corresponding to target Practitioner
+     * @param {string[]} practitionerIDs list of IDs associated to target Practitioner
      * @param {(data: Patient[], progress: Progress) => void} progressCallback
      * @returns {Promise<Patient[]>} returns a promise containing an array of all the Patients associated with the target Practitioner
      * @memberof DataSource

@@ -55,7 +55,7 @@ export default class FHIRServer implements DataSource {
    * Fetches an array of all associated IDs of a target practitioner
    *
    * @param {Identifier} practitionerIdentifier unique identifier corresponding to target Practitioner
-   * @returns {Promise<string[]>} returns a promise containing an array of all the IDs associated with the target Practitioner
+   * @returns {Promise<MaybePractitioner>} returns a promise containing a MaybePractitioner that can take the form of a Practitioner if found, undefined if not fetched and null if not found
    * @memberof FHIRServer
    */
   async getPractitioner(practitionerIdentifier: Identifier): Promise<MaybePractitioner> {
@@ -82,7 +82,7 @@ export default class FHIRServer implements DataSource {
   /**
    * Fetches a list of all patients associated with a target Practitioner
    *
-   * @param {export} pracIdentifier unique identifier corresponding to target Practitioner
+  * @param {string[]} practitionerIDs list of IDs associated to target Practitione
    * @param {(data: Patient[], progress: Progress) => void} progressCallback
    * @returns {Promise<Patient[]>} returns a promise containing an array of all the Patients associated with the target Practitioner
    * @memberof FHIRServer
@@ -118,7 +118,7 @@ export default class FHIRServer implements DataSource {
    * Fetches the latest cholesterol reading of target Patient, if available
    *
    * @param {string} patientID unique ID corresponding to target Patient
-   * @returns {Promise<any>} returns a promise containing the latest cholesterol reading of the target Patient(if available)
+   * @returns {Promise<Observation | null>} returns a promise containing an Observation with the latest cholesterol reading of the target Patient(if available)
    * @memberof FHIRServer
    */
   async getCholesterol(patientID: string): Promise<Observation | null> {
