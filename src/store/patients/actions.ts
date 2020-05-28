@@ -22,6 +22,10 @@ export const fetchPatients = (practitionerIDs: string[]): AppThunk<void> => asyn
     type: PatientsActionTypes.CLEAR_PATIENTS
   });
 
+  if (practitionerIDs.length === 0) {
+    return []
+  }
+
   dispatch({
     type: PatientsActionTypes.FETCH_REQUEST
   });

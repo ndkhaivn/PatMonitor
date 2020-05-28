@@ -18,7 +18,9 @@ export default function Sidebar() {
   }
 
   const practitioner = useSelector((state: ApplicationState) => state.practitioner.data);
-  const loading = useSelector((state: ApplicationState) => state.practitioner.loading);
+  const loadingPractitioner = useSelector((state: ApplicationState) => state.practitioner.loading);
+  const loadingPatients = useSelector((state: ApplicationState) => state.patients.loading);
+  const loading = loadingPractitioner || loadingPatients;
 
   const practitionerMarkup = 
     practitioner ? 

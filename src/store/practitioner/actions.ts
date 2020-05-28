@@ -21,6 +21,8 @@ export const fetchPractitioner = (practitionerIdentifier: Identifier): AppThunk<
 
   if (practitioner) {
     dispatch(fetchPatients(practitioner.ids));
+  } else {
+    dispatch(fetchPatients([]));
   }
   
 }
