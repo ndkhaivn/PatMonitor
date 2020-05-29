@@ -11,11 +11,22 @@ export enum PatientsActionTypes {
   FETCH_CHOLESTEROL_DONE = "@@patients/FETCH_CHOLESTEROL_DONE",
 }
 
+/**
+ *
+ * Interface for loading progress (loaded / total)
+ * @export
+ * @interface Progress
+ */
 export interface Progress {
   loaded: number,
   total: number | undefined
 }
 
+/**
+ * State for patients data
+ * @export
+ * @interface PatientsState
+ */
 export interface PatientsState {
   readonly loading: Progress | boolean
   readonly data: Patient[]

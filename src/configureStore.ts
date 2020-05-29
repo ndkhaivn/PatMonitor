@@ -12,6 +12,7 @@ declare global {
   }
 }
 
+// Create a single store
 export default function configureStore(initialState: ApplicationState): Store<ApplicationState> {
 
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;

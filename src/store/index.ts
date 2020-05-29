@@ -7,7 +7,10 @@ import { combineReducers, AnyAction } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 import { SystemState } from './system/types';
 
-
+/**
+ * Root state of the store
+ * @interface ApplicationState
+ */
 export interface ApplicationState {
   practitioner: PractitionerState,
   patients: PatientsState,

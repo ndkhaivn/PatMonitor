@@ -15,14 +15,14 @@ interface MainProps {
 const App: React.FC<MainProps> = ({ store }) => {
   return (
     <Provider store={store}>
-    <div>
-      <Sidebar />
+      <div>
+        <Sidebar />
 
-      <div className="page-content">
-        <MainContent />
+        <div className="page-content">
+          <MainContent />
+        </div>
+        
       </div>
-      
-    </div>
     </Provider>
   );
 }

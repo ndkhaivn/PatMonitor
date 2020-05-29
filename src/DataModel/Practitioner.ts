@@ -26,4 +26,6 @@ constructor(identifier: Identifier, ids: string[], name: Name[], address: Addres
   }
 }
 
+// undefined: Practitioner is not fetched yet
+// null: Practitioner not found
 export type MaybePractitioner = Practitioner | undefined | null;

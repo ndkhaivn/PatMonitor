@@ -26,18 +26,22 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
       return initialState
     }
     case PatientsActionTypes.TOGGLE_MONITOR_PATIENT: {
+      // find the index of target patient
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
+      // toggle monitoring this patient
       newData[idx].isMonitored = !newData[idx].isMonitored;
       return { ...state, data: newData};
     }
     case PatientsActionTypes.FETCH_CHOLESTEROL_REQUEST: {
+      // find index of target patient & set cholesterol loading
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
       newData[idx].cholesterolLoading = true;
       return { ...state, data: newData };
     }
     case PatientsActionTypes.FETCH_CHOLESTEROL_DONE: {
+      // find index of target patient & set result cholesterol
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
       newData[idx].cholesterolLoading = false;
