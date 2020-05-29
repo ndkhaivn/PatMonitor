@@ -20,4 +20,4 @@
 
 5. Does not handle invalid practitioner identifier
 	Reproduce: Add practitioner identifier: 32312321
-	Status: Open
+	Status: Fixed
