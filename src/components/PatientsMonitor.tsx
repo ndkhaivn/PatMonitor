@@ -1,39 +1,41 @@
-import React, { useState, useMemo } from "react"
-import { MenuItem, Label, InputGroup, Dialog, Icon, Spinner, Intent } from "@blueprintjs/core";
-import { Select, ItemRenderer, MultiSelect } from "@blueprintjs/select";
+import React, { useState } from "react"
+import { Icon, Spinner, Intent } from "@blueprintjs/core";
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
 import Patient from '../DataModel/Patient';
 import PatientsTable from "./PatientsTable";
-import { useDispatch } from 'react-redux';
-import { PatientsActionTypes } from "../store/patients/types";
-import { fetchPatientCholesterol } from "../store/patients/actions";
-import { Observation } from '../DataModel/Resource';
 import PatientInfoDialog from "./PatientInfoDialog";
 
+// Initialize an empty patient for displaying in PatientInfoDialog
 const emptyPatient = new Patient("", [], "", "", []);
 
+/**
+ * PatientMonitor component for displaying monitored patients and detailed view
+ */
 export default function PatientsMonitor() {
 
-  const dispatch = useDispatch();
-
-  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
-  const toggleDetailDialog = () => { setDetailDialogOpen(!detailDialogOpen) };
-  const [displayedPatient, setDisplayedPatient] = useState(emptyPatient);
-
+  // Connect to the store to get the patient list
   let patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+  // Only display monitored patients
   patients = patients.filter(patient => patient.isMonitored === true);
 
+  const [detailDialogOpen, setDetailDialogOpen] = useState(false);
+  const [displayedPatient, setDisplayedPatient] = useState(emptyPatient);
+
+  const toggleDetailDialog = () => { setDetailDialogOpen(!detailDialogOpen) };
+
+  // Finding the average cholesterol level
   let sumCholesterol = 0;
   let effectivePatientsCount = 0;
   patients.forEach(patient => {
-    if (patient.totalCholesterol?.value) {
+    if (patient.totalCholesterol?.value) { // ignore patients without cholesterol value
       sumCholesterol += patient.totalCholesterol.value.value;
       effectivePatientsCount++;
     }
   });
   const averageCholesterol = effectivePatientsCount ? sumCholesterol/effectivePatientsCount : null;
 
+  // Function for checking whether a patient has above-average cholesterol level
   const isAboveAverageCholesterol = (patient: Patient): boolean => {
     if (!averageCholesterol || !(patient.totalCholesterol?.value.value)) { // if average or cholesterol value not found
       return false;
@@ -44,6 +46,7 @@ export default function PatientsMonitor() {
 
   const warningMarkup = <Icon icon="warning-sign" intent={Intent.WARNING}/>
 
+  // Columns that will be passed into PatientsTable
   const columns = React.useMemo(
     () => [
       {
@@ -66,19 +69,6 @@ export default function PatientsMonitor() {
     [averageCholesterol]
   );
 
-  // const filterPatient = (patients: Patient[], query: string) => {
-  //   if (!patients) {
-  //     return []
-  //   }
-
-  //   return patients.filter((patient: Patient) => {
-  //     const normalizedName = patient.name[0].toString().toLowerCase();
-  //     const normalizedQuery = query.toLowerCase();
-  //     return normalizedName.indexOf(normalizedQuery) >= 0;
-  //   });
-  // }
-  console.log("rendering select");
-
   const noDataMessage = "You are not monitoring any patients, add new patients to monitor";
 
   return (
@@ -89,7 +79,12 @@ export default function PatientsMonitor() {
         toggleOpen={toggleDetailDialog}
       />
 
-      <PatientsTable data={patients} columns={columns} onClickRow={(patient: Patient) => { toggleDetailDialog(); setDisplayedPatient(patient)}} noDataMessage={noDataMessage}/>
+      <PatientsTable 
+        data={patients} 
+        columns={columns} 
+        noDataMessage={noDataMessage} 
+        onClickRow={(patient: Patient) => { toggleDetailDialog(); setDisplayedPatient(patient)}}
+      />
     </div>
     
   )

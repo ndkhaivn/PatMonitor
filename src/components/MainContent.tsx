@@ -1,30 +1,31 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Navbar, Alignment, Button, Spinner, AnchorButton, NumericInput, Position, Tag, ControlGroup } from '@blueprintjs/core'
 import PatientSelect from './PatientSelect'
-import PatientsTable from './PatientsTable';
 import { useDispatch, useSelector } from "react-redux"
 
-import { fetchPatients, fetchPatientCholesterol } from '../store/patients/actions';
-import { Identifier, Observation } from '../DataModel/Resource';
-import Patient from '../DataModel/Patient';
 import { ApplicationState } from '../store/index';
 import { Progress } from '../store/patients/types';
-import PatientInfoDialog from './PatientInfoDialog';
 import PatientsMonitor from './PatientsMonitor';
 import { setCholesterolTimer } from '../store/system/actions';
 
-
-
+/**
+ *
+ * MainContent component: Display components
+ * + PatientSelect
+ * + PatientsMonitor
+ * + button for opening PatientSelect
+ * + Timer input field
+ */
 export default function MainContent() {
-
-  // const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
   
-  const [selectDialogOpen, setSelectDialogOpen] = useState(false);
-  const [reloadTimeout, setReloadTimeout] = useState(5);
+  const [selectDialogOpen, setSelectDialogOpen] = useState(false);    // initially hide PatientSelect
+  const [reloadTimeout, setReloadTimeout] = useState(5);              // default timeout = 5s
 
   const dispatch = useDispatch();
   
   const toggleSelectDialog = () => { setSelectDialogOpen(!selectDialogOpen) };
+
+  // Connect to store
   const loading: Progress | boolean = useSelector((state: ApplicationState) => state.patients.loading);
 
   const loadingMarkup = 
@@ -38,12 +39,11 @@ export default function MainContent() {
     <div className="main-content">
       <Navbar className="toolbar">
         <Navbar.Group>
-
         <AnchorButton text="Patient" icon="plus" onClick={toggleSelectDialog}/>
         {loadingMarkup}
-          
         </Navbar.Group>
           
+        {/* Refresh timer */}
         <Navbar.Group align={Alignment.RIGHT}> 
           <ControlGroup>
             <NumericInput 
@@ -54,16 +54,12 @@ export default function MainContent() {
             />
             <Button icon="stopwatch" onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
           </ControlGroup>
-
         </Navbar.Group>
       </Navbar>
 
       <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
 
       <PatientsMonitor />
-      {/* <i id="last-updated" className="bp3-text-muted">
-        Last updated: 13/05/2020 19:30{' '}
-      </i> */}
 
     </div>
   );

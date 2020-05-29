@@ -8,12 +8,25 @@ import {
   FormGroup,
   Tag,
 } from '@blueprintjs/core';
-import { useState } from 'react';
-import PatientInfoDialog from './PatientInfoDialog';
 import Patient from '../DataModel/Patient';
-import { useSelector } from 'react-redux';
-import { ApplicationState } from '../store';
 
+/**
+ * Display a table with defined columns and data
+ * This table provides sorting and pagination
+ *
+ * @param {{
+ *   columns: any[];
+ *   data: Patient[];
+ *   onClickRow: (row: Patient) => void;
+ *   noDataMessage: string
+ * }} {
+ *   columns,
+ *   data,
+ *   onClickRow,
+ *   noDataMessage
+ * }
+ * @returns
+ */
 function PatientsTable({
   columns,
   data,
@@ -32,7 +45,6 @@ function PatientsTable({
     headerGroups,
     page,
     prepareRow,
-
     canPreviousPage,
     canNextPage,
     pageOptions,
@@ -53,8 +65,6 @@ function PatientsTable({
     usePagination
   );
 
-  console.log('rendering table');
-
   return (
     <div>
       <div className="tbl-header" id="patient-table">
@@ -67,7 +77,6 @@ function PatientsTable({
                     {column.render('Header')}
 
                     {/* Add a sort direction indicator */}
-
                     <span>
                       <Icon
                         icon={
@@ -102,6 +111,7 @@ function PatientsTable({
               );
             })}
 
+            {/* Show this row when there is no data (noDataMessage) */}
             <tr>
               <td colSpan={columns.length} style={{ textAlign: "center" }}>
                 { data.length === 0 ? noDataMessage : `Showing ${pageIndex*pageSize + 1} to ${pageIndex*pageSize + page.length} of ${data.length} results`}
@@ -110,6 +120,7 @@ function PatientsTable({
           </tbody>
         </table>
 
+        {/* Pagination controls */}
         <ControlGroup fill={true} className="pagination-toolbar">
           <div>
             <Button

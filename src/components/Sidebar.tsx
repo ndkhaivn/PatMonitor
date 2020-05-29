@@ -1,27 +1,33 @@
 import React, { useState } from "react"
-import { InputGroup, Button, Card, Navbar, Alignment, Divider, Spinner, Icon } from '@blueprintjs/core';
+import { InputGroup, Button, Navbar, Alignment, Spinner, Icon } from '@blueprintjs/core';
 import { useDispatch } from 'react-redux';
-import { fetchPatients } from '../store/patients/actions';
 import { Identifier } from "../DataModel/Resource";
 import { fetchPractitioner } from '../store/practitioner/actions';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
 import { Intent } from '@blueprintjs/core';
 
+/**
+ * Sidebar component: Contain input field for entering practitioner identifier and practitioner info
+ */
 export default function Sidebar() {
 
   const [practitionerIdentifier, setPractitionerIdentifier] = useState("");
 
+  // Connect to store
+  const practitioner = useSelector((state: ApplicationState) => state.practitioner.data);
+  const loadingPractitioner = useSelector((state: ApplicationState) => state.practitioner.loading);
+  const loadingPatients = useSelector((state: ApplicationState) => state.patients.loading);
+
   const dispatch = useDispatch();
+  // Tell the store to fetch the practitioner with identifier
   const enterPractitioner = () => {
     dispatch(fetchPractitioner(new Identifier("http://hl7.org/fhir/sid/us-npi", practitionerIdentifier)));
   }
 
-  const practitioner = useSelector((state: ApplicationState) => state.practitioner.data);
-  const loadingPractitioner = useSelector((state: ApplicationState) => state.practitioner.loading);
-  const loadingPatients = useSelector((state: ApplicationState) => state.patients.loading);
   const loading = loadingPractitioner || loadingPatients;
 
+  // conditional markup of practitioner: practitioner info if defined or 404 error if null
   const practitionerMarkup = 
     practitioner ? 
       <div>
@@ -59,6 +65,7 @@ export default function Sidebar() {
         </Navbar.Group>
       </Navbar>
 
+      {/* Enter practitioner identifier */}
       <InputGroup
         leftIcon="diagnosis"
         rightElement={loading ? <Spinner size={Spinner.SIZE_SMALL}/> : <Button icon="key-enter" minimal={true} onClick={enterPractitioner}/>}
@@ -72,7 +79,6 @@ export default function Sidebar() {
         {practitionerMarkup}
       </div>
       
-
     </div>
   )
 }

@@ -4,13 +4,19 @@ import Patient from '../DataModel/Patient';
 import { useDispatch } from 'react-redux';
 import { PatientsActionTypes } from '../store/patients/types';
 
-
+/**
+ * PatientInfoDialog component, for displaying patient's info and a button to stop monitoring that patient
+ *
+ * @export
+ * @param {{ isOpen: boolean, toggleOpen: () => void, patient: Patient }} { isOpen, toggleOpen, patient }
+ * @returns
+ */
 export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isOpen: boolean, toggleOpen: () => void, patient: Patient }) {
 
-  // TODO: Patient doesn't have address
   const address = patient.address ? patient.address[0] : undefined;
   const dispatch = useDispatch();
 
+  // Tell the store to stop monitoring this patient
   const stopMonitoring = () => {
     dispatch({
       type: PatientsActionTypes.TOGGLE_MONITOR_PATIENT,
@@ -29,11 +35,11 @@ export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isO
       canEscapeKeyClose={true}
     >
 
+      {/* Table content */}
       <div className={Classes.DIALOG_BODY}>
-
         <table id="patient-info">
           <tbody>
-            <tr>
+            <tr> 
               <td> ID </td>
               <td> {patient.id} </td>
             </tr> 
@@ -53,13 +59,11 @@ export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isO
               <td> Address </td>
               <td> {address?.line.join(" ")}, <br/> {address?.city} {address?.postalCode}, <br/> {address?.state}, {address?.country} </td>
             </tr>
-
           </tbody>
-
         </table>
-
       </div>
 
+      {/* Stop Monitoring button */}
       <div className={Classes.DIALOG_FOOTER}>
           <div className={Classes.DIALOG_FOOTER_ACTIONS}>
             <Button intent={Intent.DANGER} onClick={stopMonitoring}>Stop Monitoring</Button>

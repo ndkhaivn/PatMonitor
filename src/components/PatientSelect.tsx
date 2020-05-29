@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from "react"
-import { MenuItem, Label, InputGroup, Dialog, Icon, Spinner } from "@blueprintjs/core";
-import { Select, ItemRenderer, MultiSelect } from "@blueprintjs/select";
+import React from "react"
+import { Dialog, Icon, Spinner } from "@blueprintjs/core";
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
 import Patient from '../DataModel/Patient';
@@ -9,20 +8,24 @@ import { useDispatch } from 'react-redux';
 import { PatientsActionTypes } from "../store/patients/types";
 import { fetchPatientCholesterol } from "../store/patients/actions";
 
+/**
+ * Modal for toggling monitoring patients
+ * @param {{ isOpen: boolean, toggleOpen: () => void }} { isOpen, toggleOpen }
+ */
 export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean, toggleOpen: () => void }) {
 
   const dispatch = useDispatch();
 
+  // on click on patient: toggle monitoring that patient
   const handleClickPatient = (patient: Patient) => {
     dispatch({
       type: PatientsActionTypes.TOGGLE_MONITOR_PATIENT,
       patientId: patient.id
     });
-
     dispatch(fetchPatientCholesterol(patient.id));
-
   }
 
+  // Table structure
   const columns = React.useMemo(
     () => [
       {
@@ -46,19 +49,17 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
         accessor: 'isMonitored',
         Cell: ({ value }: { value: boolean }) => { return <Icon icon={value ? "tick" : "blank"}/> } 
       },
-    
     ],
     []
   );
 
+  // Connect to store
   const loading = useSelector((state: ApplicationState) => state.patients.loading);
-  const data: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+  const patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+
   const noDataMessage = "No patients found!";
-
-  const tableMarkup = <PatientsTable columns={columns} data={data} onClickRow={handleClickPatient} noDataMessage={noDataMessage}/>;
+  // Modal title icon will be a spinner if the patients are still being fetched
   const iconMarkup = loading ? <div className="spinner"><Spinner size={Spinner.SIZE_SMALL} /> </div> : "pulse"
-
-  console.log("rendering select");
 
   return (
     <Dialog
@@ -69,7 +70,7 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
       canEscapeKeyClose={true}
       onClose={toggleOpen}
     >
-      {tableMarkup}
+      <PatientsTable columns={columns} data={patients} onClickRow={handleClickPatient} noDataMessage={noDataMessage}/>
     </Dialog>
   )
 }
