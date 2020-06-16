@@ -3,7 +3,7 @@ import { DataSource } from './DataSource';
 import Patient from './Patient';
 import axios from 'axios';
 import config from "../config";
-import { Identifier, Name, Address, Measurement, Observation } from './Resource';
+import { Identifier, Name, Address, Measurement, Observation, Coding, BloodPressure } from './Resource';
 import { Progress } from '../store/patients/types';
 import { Practitioner, MaybePractitioner } from './Practitioner';
 
@@ -137,7 +137,57 @@ export default class FHIRServer implements DataSource {
     let effectiveDateTime = observation.effectiveDateTime;
     let value = new Measurement(observation.valueQuantity.unit, observation.valueQuantity.value);
 
-    return new Observation(value, effectiveDateTime);
+    let coding = observation.code.coding[0];
+    coding = new Coding(coding.code, coding.display, coding.system);
+    return new Observation(value, effectiveDateTime, coding);
+  }
+  
+  async getBloodPressure(patientID: string, count: number): Promise<BloodPressure[] | null> {
+
+    let bloodPressures;
+
+    // retrieve the latest count number of blood pressure readings for given patient
+    let response = await axios.get(
+      `${this.rootUrl}/Observation?patient=${patientID}&code=55284-4&_sort=-date&_count=` + count
+    )
+      
+
+    if (response.data.entry) {
+      bloodPressures = [];
+      let entries = response.data.entry as Array<any>;
+      entries = entries.map(entry => entry.resource);
+
+      entries.forEach(observation => {
+        let effectiveDateTime, value, coding;
+        effectiveDateTime = observation.effectiveDateTime;
+
+        // create Diastolic Observation
+        let diastolicObs = observation.component[0];
+        value = new Measurement(diastolicObs.valueQuantity.unit, diastolicObs.valueQuantity.value);
+        coding = diastolicObs.code.coding[0];
+        coding = new Coding(coding.code, coding.display, coding.system);
+        diastolicObs = new Observation(value, effectiveDateTime, coding);
+
+        // create Systolic Observation
+        let systolicObs = observation.component[1]
+        value = new Measurement(systolicObs.valueQuantity.unit, systolicObs.valueQuantity.value);
+        coding = systolicObs.code.coding[0];
+        coding = new Coding(coding.code, coding.display, coding.system);
+        systolicObs = new Observation(value, effectiveDateTime, coding);
+
+        // create BloodPressure object
+        bloodPressures.push(new BloodPressure(diastolicObs, systolicObs));        
+      });
+           
+    } else {
+      // if the patient does not have any blood pressure measurements, return null
+      bloodPressures = null;
+    }
+
+    
+
+    return bloodPressures;
+
   }
 
 }

@@ -1,5 +1,5 @@
 import Patient from "./Patient";
-import { Identifier, Observation } from './Resource';
+import { Identifier, Observation, BloodPressure } from './Resource';
 import { Progress } from "../store/patients/types";
 import FHIRServer from './FHIRServer';
 import { Practitioner, MaybePractitioner } from './Practitioner';
@@ -38,6 +38,9 @@ export interface DataSource {
      * @memberof DataSource
      */
     getCholesterol(patientID: string): Promise<Observation | null>;
+
+    getBloodPressure(patientID: string, count: number): Promise<BloodPressure[] | null>;
+
 }
 
 // Creating and exporting the dataSource instance - a DataSource singleton for the whole app

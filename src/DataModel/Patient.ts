@@ -1,4 +1,4 @@
-import { Name, Address, Observation } from './Resource';
+import { Name, Address, Observation, BloodPressure } from './Resource';
 /**
  * Class that represents a Patient in the medical record system
  *
@@ -14,6 +14,7 @@ export default class Patient {
   isMonitored: boolean;
   totalCholesterol: Observation | undefined | null;
   cholesterolLoading: boolean;
+  bloodPressure: BloodPressure | undefined | null;
 
   /**
    *Creates an instance of Patient.
