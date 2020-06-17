@@ -7,6 +7,7 @@ import { ApplicationState } from '../store/index';
 import { Progress } from '../store/patients/types';
 import PatientsMonitor from './PatientsMonitor';
 import { setCholesterolTimer } from '../store/system/actions';
+import CholesterolBarChart from './CholesterolBarChart';
 
 /**
  *
@@ -60,6 +61,7 @@ export default function MainContent() {
       <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
 
       <PatientsMonitor />
+      <CholesterolBarChart />
 
     </div>
   );
