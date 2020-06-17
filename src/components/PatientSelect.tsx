@@ -1,12 +1,12 @@
 import React from "react"
-import { Dialog, Icon, Spinner } from "@blueprintjs/core";
+import { Dialog, Icon, Spinner, Checkbox } from "@blueprintjs/core";
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
 import Patient from '../DataModel/Patient';
 import PatientsTable from "./PatientsTable";
 import { useDispatch } from 'react-redux';
 import { PatientsActionTypes } from "../store/patients/types";
-import { fetchPatientCholesterol } from "../store/patients/actions";
+import { fetchPatientCholesterol, fetchPatientBloodPressure, toggleMonitorPatient } from "../store/patients/actions";
 
 /**
  * Modal for toggling monitoring patients
@@ -17,12 +17,8 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
   const dispatch = useDispatch();
 
   // on click on patient: toggle monitoring that patient
-  const handleClickPatient = (patient: Patient) => {
-    dispatch({
-      type: PatientsActionTypes.TOGGLE_MONITOR_PATIENT,
-      patientId: patient.id
-    });
-    dispatch(fetchPatientCholesterol(patient.id));
+  const clickMonitorPatient = (patient: Patient, type: string) => {
+    dispatch(toggleMonitorPatient(patient, type));
   }
 
   // Table structure
@@ -45,10 +41,27 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
         accessor: (patient: Patient)  => { return patient.name[0].family },
       },
       {
-        Header: 'Monitoring',
-        accessor: 'isMonitored',
-        Cell: ({ value }: { value: boolean }) => { return <Icon icon={value ? "tick" : "blank"}/> } 
+        Header: 'Monitoring Cholesterol',
+        accessor: (patient: Patient) => patient,
+        Cell: ({ value }: { value: Patient }) => { 
+          return <Checkbox 
+            large={true}
+            checked={value.isMonitoredCholesterol} 
+            onChange={() => clickMonitorPatient(value, PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL) } 
+          />
+        } 
       },
+      {
+        Header: 'Monitoring Blood Pressure',
+        accessor: (patient: Patient) => patient,
+        Cell: ({ value }: { value: Patient }) => { 
+          return <Checkbox 
+            large={true}
+            checked={value.isMonitoredBloodPressure} 
+            onChange={() => clickMonitorPatient(value, PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE) } 
+          />
+        } 
+      }
     ],
     []
   );
@@ -70,7 +83,7 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
       canEscapeKeyClose={true}
       onClose={toggleOpen}
     >
-      <PatientsTable columns={columns} data={patients} onClickRow={handleClickPatient} noDataMessage={noDataMessage}/>
+      <PatientsTable columns={columns} data={patients} onClickRow={() => {}} noDataMessage={noDataMessage}/>
     </Dialog>
   )
 }

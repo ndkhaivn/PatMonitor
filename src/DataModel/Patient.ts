@@ -11,10 +11,12 @@ export default class Patient {
   gender: string
   birthDate: string
   address: Address[]
-  isMonitored: boolean;
+  isMonitoredCholesterol: boolean;
+  isMonitoredBloodPressure: boolean;
   totalCholesterol: Observation | undefined | null;
   cholesterolLoading: boolean;
   bloodPressure: BloodPressure[] | undefined | null;
+  bloodPressureLoading: boolean;
 
   /**
    *Creates an instance of Patient.
@@ -31,7 +33,9 @@ export default class Patient {
     this.gender = gender;
     this.birthDate = birthDate;
     this.address = address;
-    this.isMonitored = false;
+    this.isMonitoredCholesterol = false;
+    this.isMonitoredBloodPressure = false;
     this.cholesterolLoading = false;
+    this.bloodPressureLoading = false;
   }
 }

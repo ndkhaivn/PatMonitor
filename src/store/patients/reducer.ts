@@ -25,12 +25,20 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
     case PatientsActionTypes.CLEAR_PATIENTS: {
       return initialState
     }
-    case PatientsActionTypes.TOGGLE_MONITOR_PATIENT: {
+    case PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL: {
       // find the index of target patient
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      // toggle monitoring this patient
-      newData[idx].isMonitored = !newData[idx].isMonitored;
+      // toggle monitoring cholesterol this patient
+      newData[idx].isMonitoredCholesterol = !newData[idx].isMonitoredCholesterol;
+      return { ...state, data: newData};
+    }
+    case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE: {
+      // find the index of target patient
+      let newData = [ ...state.data ];
+      let idx = indexOfPatient(newData, action.patientId);
+      // toggle monitoring blood pressure this patient
+      newData[idx].isMonitoredBloodPressure = !newData[idx].isMonitoredBloodPressure;
       return { ...state, data: newData};
     }
     case PatientsActionTypes.FETCH_CHOLESTEROL_REQUEST: {
@@ -46,6 +54,21 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
       let idx = indexOfPatient(newData, action.patientId);
       newData[idx].cholesterolLoading = false;
       newData[idx].totalCholesterol = action.payload;
+      return { ...state, data: newData };
+    }
+    case PatientsActionTypes.FETCH_BLOOD_PRESSURE_REQUEST: {
+      // find index of target patient & set blood pressure loading
+      let newData = [ ...state.data ];
+      let idx = indexOfPatient(newData, action.patientId);
+      newData[idx].bloodPressureLoading = true;
+      return { ...state, data: newData };
+    }
+    case PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE: {
+      // find index of target patient & set result blood pressure
+      let newData = [ ...state.data ];
+      let idx = indexOfPatient(newData, action.patientId);
+      newData[idx].bloodPressureLoading = false;
+      newData[idx].bloodPressure = action.payload;
       return { ...state, data: newData };
     }
     default:
