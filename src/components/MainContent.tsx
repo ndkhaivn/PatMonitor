@@ -8,6 +8,12 @@ import { Progress } from '../store/patients/types';
 import PatientsMonitor from './PatientsMonitor';
 import { setCholesterolTimer } from '../store/system/actions';
 import CholesterolBarChart from './CholesterolBarChart';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from 'react-router-dom';
 
 /**
  *
@@ -38,31 +44,58 @@ export default function MainContent() {
 
   return (
     <div className="main-content">
-      <Navbar className="toolbar">
-        <Navbar.Group>
-        <AnchorButton text="Patient" icon="plus" onClick={toggleSelectDialog}/>
-        {loadingMarkup}
-        </Navbar.Group>
+      <Router>
+        <Navbar className="toolbar">
+          <Navbar.Group>
+            <Link to="/">
+              <Button className="bp3-minimal" icon="home" text="Monitor" />
+            </Link>
+            <Link to="/cholesterol">
+              <Button className="bp3-minimal" icon="pulse" text="Cholesterol" />
+            </Link>
+            <Link to="/blood-pressure">
+              <Button className="bp3-minimal" icon="pulse" text="Blood Pressure" />
+            </Link>
+          </Navbar.Group>
           
-        {/* Refresh timer */}
-        <Navbar.Group align={Alignment.RIGHT}> 
-          <ControlGroup>
-            <NumericInput 
-              buttonPosition={Position.LEFT} 
-              rightElement={<Tag minimal={true}>s</Tag>}
-              onValueChange={(value) => setReloadTimeout(value)}
-              value={reloadTimeout}
-            />
-            <Button icon="stopwatch" onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
-          </ControlGroup>
-        </Navbar.Group>
-      </Navbar>
+          {/* Refresh timer */}
+          <Navbar.Group align={Alignment.RIGHT}> 
 
-      <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
+            <AnchorButton text="Patient" icon="plus" onClick={toggleSelectDialog}/>
+            {loadingMarkup}
 
-      <PatientsMonitor />
-      <CholesterolBarChart />
+            <ControlGroup>
+              <NumericInput 
+                buttonPosition={Position.LEFT} 
+                rightElement={<Tag minimal={true}>s</Tag>}
+                onValueChange={(value) => setReloadTimeout(value)}
+                value={reloadTimeout}
+              />
+              <Button icon="stopwatch" onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
+            </ControlGroup>
+          </Navbar.Group>
+        </Navbar>
 
+        <PatientSelect isOpen={selectDialogOpen} toggleOpen={toggleSelectDialog} />
+
+        <Switch>
+          
+          <Route path="/cholesterol">
+            <CholesterolBarChart />
+          </Route>
+
+          <Route path="/blood-pressure">
+            
+          </Route>
+
+          <Route path="/">
+            <PatientsMonitor />
+          </Route>
+        </Switch>
+
+        
+      
+      </Router>
     </div>
   );
 }
