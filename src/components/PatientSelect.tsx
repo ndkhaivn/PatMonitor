@@ -41,7 +41,7 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
         accessor: (patient: Patient)  => { return patient.name[0].family },
       },
       {
-        Header: 'Monitoring Cholesterol',
+        Header: 'Cholesterol',
         accessor: (patient: Patient) => patient,
         Cell: ({ value }: { value: Patient }) => { 
           return <Checkbox 
@@ -52,7 +52,7 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
         } 
       },
       {
-        Header: 'Monitoring Blood Pressure',
+        Header: 'Blood Pressure',
         accessor: (patient: Patient) => patient,
         Cell: ({ value }: { value: Patient }) => { 
           return <Checkbox 

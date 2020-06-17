@@ -65,6 +65,26 @@ export default function PatientsMonitor() {
         Header: 'Time',
         accessor: (patient: Patient)  => { return patient.totalCholesterol?.effectiveDateTime },
       },
+      {
+        Header: 'Systolic Blood Pressure',
+        accessor: (patient: Patient)  => patient,
+        Cell: ({ value }: { value: Patient }) => 
+          value.bloodPressureLoading ? 
+            <Spinner size={Spinner.SIZE_SMALL} /> : 
+            value.bloodPressure === null ? "N/A" : value.bloodPressure === undefined ? null : value.bloodPressure![0].systolic.value.toString()
+      }, 
+      {
+        Header: 'Diastolic Blood Pressure',
+        accessor: (patient: Patient)  => patient,
+        Cell: ({ value }: { value: Patient }) => 
+          value.bloodPressureLoading ? 
+            <Spinner size={Spinner.SIZE_SMALL} /> : 
+            value.bloodPressure === null ? "N/A" : value.bloodPressure === undefined ? null : value.bloodPressure![0].diastolic.value.toString()
+      },
+      {
+        Header: 'Time1',
+        accessor: (patient: Patient)  => { return patient.bloodPressure?.[0].systolic.effectiveDateTime },
+      }
     ],
     [averageCholesterol]
   );
