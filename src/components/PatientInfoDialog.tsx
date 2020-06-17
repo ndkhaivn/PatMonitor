@@ -1,8 +1,9 @@
 import React from 'react';
-import { Dialog, Classes, Button, Intent } from '@blueprintjs/core';
+import { Dialog, Classes, Button, Intent, Switch } from '@blueprintjs/core';
 import Patient from '../DataModel/Patient';
 import { useDispatch } from 'react-redux';
 import { PatientsActionTypes } from '../store/patients/types';
+import { toggleMonitorPatient } from '../store/patients/actions';
 
 /**
  * PatientInfoDialog component, for displaying patient's info and a button to stop monitoring that patient
@@ -16,13 +17,9 @@ export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isO
   const address = patient.address ? patient.address[0] : undefined;
   const dispatch = useDispatch();
 
-  // Tell the store to stop monitoring this patient
-  const stopMonitoring = () => {
-    dispatch({
-      type: PatientsActionTypes.TOGGLE_MONITOR_PATIENT,
-      patientId: patient.id
-    });
-    toggleOpen();
+  // Tell the store to stop monitoring this patient (cholesterol or blood pressure)
+  const toggleSwitch = (type: string) => {
+    dispatch(toggleMonitorPatient(patient, type));
   };
 
   return (
@@ -63,11 +60,17 @@ export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isO
         </table>
       </div>
 
-      {/* Stop Monitoring button */}
       <div className={Classes.DIALOG_FOOTER}>
-          <div className={Classes.DIALOG_FOOTER_ACTIONS}>
-            <Button intent={Intent.DANGER} onClick={stopMonitoring}>Stop Monitoring</Button>
-          </div>
+          <Switch 
+            checked={patient.isMonitoredCholesterol} 
+            label="Monitor Cholesterol" 
+            onChange={() => toggleSwitch(PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL)} 
+          />
+          <Switch 
+            checked={patient.isMonitoredBloodPressure} 
+            label="Monitor Blood Pressure" 
+            onChange={() => toggleSwitch(PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE)} 
+          />
       </div>
 
     </Dialog>

@@ -17,7 +17,7 @@ export default function PatientsMonitor() {
   // Connect to the store to get the patient list
   let patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
   // Only display monitored patients
-  patients = patients.filter(patient => patient.isMonitored === true);
+  patients = patients.filter(patient => patient.isMonitoredCholesterol || patient.isMonitoredBloodPressure);
 
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [displayedPatient, setDisplayedPatient] = useState(emptyPatient);
