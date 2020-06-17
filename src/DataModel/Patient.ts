@@ -1,4 +1,4 @@
-import { Name, Address, Observation } from './Resource';
+import { Name, Address, Observation, BloodPressure } from './Resource';
 /**
  * Class that represents a Patient in the medical record system
  *
@@ -14,22 +14,23 @@ export default class Patient {
   isMonitored: boolean;
   totalCholesterol: Observation | undefined | null;
   cholesterolLoading: boolean;
+  bloodPressure: BloodPressure[] | undefined | null;
 
   /**
    *Creates an instance of Patient.
-   * @param {string} newId unique ID associated with Patient
-   * @param {Name[]} newName Name of Patient
-   * @param {string} newGender string representing gender of Patient
-   * @param {string} newBirthDate string representing birth date of Patient
-   * @param {Address[]} newAddress Address of Patient
+   * @param {string} id unique ID associated with Patient
+   * @param {Name[]} name Name of Patient
+   * @param {string} gender string representing gender of Patient
+   * @param {string} birthDate string representing birth date of Patient
+   * @param {Address[]} address Address of Patient
    * @memberof Patient
    */
-  constructor(newId: string, newName: Name[], newGender: string, newBirthDate: string, newAddress:Address[]) {
-    this.id = newId;
-    this.name = newName;
-    this.gender = newGender;
-    this.birthDate = newBirthDate;
-    this.address = newAddress;
+  constructor(id: string, name: Name[], gender: string, birthDate: string, address:Address[]) {
+    this.id = id;
+    this.name = name;
+    this.gender = gender;
+    this.birthDate = birthDate;
+    this.address = address;
     this.isMonitored = false;
     this.cholesterolLoading = false;
   }

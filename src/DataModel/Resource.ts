@@ -44,19 +44,19 @@ export class Address {
 
 /**
  *Creates an instance of Address.
- * @param {string[]} newLine array of strings representing street address lines
- * @param {string} newCity string representing the city
- * @param {string} newState string representing the state
- * @param {string} newPostalCode string representing the postal code
- * @param {string} newCountry string representing the country
+ * @param {string[]} line array of strings representing street address lines
+ * @param {string} city string representing the city
+ * @param {string} state string representing the state
+ * @param {string} postalCode string representing the postal code
+ * @param {string} country string representing the country
  * @memberof Address
  */
-constructor(newLine: string[], newCity: string, newState: string, newPostalCode: string, newCountry: string) {
-    this.line = newLine;
-    this.city = newCity;
-    this.state = newState;
-    this.postalCode = newPostalCode;
-    this.country = newCountry;
+constructor(line: string[], city: string, state: string, postalCode: string, country: string) {
+    this.line = line;
+    this.city = city;
+    this.state = state;
+    this.postalCode = postalCode;
+    this.country = country;
   }
 }
 /**
@@ -72,17 +72,17 @@ export class Name {
   use: string
 /**
  *Creates an instance of Name.
- * @param {string} newFamily string represenintg family name
- * @param {string[]} newGiven array of strings representing given name/s
- * @param {string[]} newPrefix array of strings representing prefix/s
- * @param {string} newUse string representing the use case of the name
+ * @param {string} family string represenintg family name
+ * @param {string[]} given array of strings representing given name/s
+ * @param {string[]} prefix array of strings representing prefix/s
+ * @param {string} use string representing the use case of the name
  * @memberof Name
  */
-constructor(newFamily: string, newGiven: string[], newPrefix: string[], newUse: string) {
-    this.family = newFamily;
-    this.given = newGiven;
-    this.prefix = newPrefix;
-    this.use = newUse;
+constructor(family: string, given: string[], prefix: string[], use: string) {
+    this.family = family;
+    this.given = given;
+    this.prefix = prefix;
+    this.use = use;
 
   }
 /**
@@ -106,13 +106,13 @@ export class Measurement {
   value: number
 /**
  *Creates an instance of Measurement.
- * @param {string} newUnit string representing the unit of measurement
+ * @param {string} unit string representing the unit of measurement
  * @param {number} newValue number representing the numerical value of the measurement
  * @memberof Measurement
  */
-constructor(newUnit: string, newValue: number) {
-    this.unit = newUnit;
-    this.value = newValue;
+constructor(unit: string, value: number) {
+    this.unit = unit;
+    this.value = value;
   }
 /**
  * Returns a string with a displayable measurement
@@ -133,14 +133,39 @@ toString(): string {
 export class Observation {
   effectiveDateTime: string
   value: Measurement
+  coding: Coding
 /**
  *Creates an instance of Observation.
  * @param {Measurement} value Measurement that represents the measurement taken during the Observation
  * @param {string} effectiveDateTime string representing the time that the Observation occurred
  * @memberof Observation
  */
-constructor(value: Measurement, effectiveDateTime: string) {
+constructor(value: Measurement, effectiveDateTime: string, coding: Coding) {
     this.value = value;
     this.effectiveDateTime = effectiveDateTime;
+    this.coding = coding;
   }
+}
+
+export class Coding {
+  code: string
+  display: string
+  system: string
+
+  constructor(code: string, display: string, system: string) {
+    this.code = code;
+    this.display = display;
+    this.system = system;
+  }
+}
+
+export class BloodPressure {
+  diastolic: Observation
+  systolic: Observation
+
+  constructor(diastolic: Observation, systolic: Observation) {
+    this.diastolic = diastolic;
+    this.systolic = systolic;
+  }
+
 }
