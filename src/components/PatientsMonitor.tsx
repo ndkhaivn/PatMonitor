@@ -5,6 +5,8 @@ import { ApplicationState } from '../store/index';
 import Patient from '../DataModel/Patient';
 import PatientsTable from "./PatientsTable";
 import PatientInfoDialog from "./PatientInfoDialog";
+import ClinicalData from '../DataModel/ClinicalData';
+import { Observation, BloodPressure } from '../DataModel/Resource';
 
 // Initialize an empty patient for displaying in PatientInfoDialog
 const emptyPatient = new Patient("", [], "", "", []);
@@ -35,12 +37,12 @@ export default function PatientsMonitor() {
   });
   const averageCholesterol = effectivePatientsCount ? sumCholesterol/effectivePatientsCount : null;
 
-  // Function for checking whether a patient has above-average cholesterol level
-  const isAboveAverageCholesterol = (patient: Patient): boolean => {
-    if (!averageCholesterol || !(patient.cholesterol.data?.value.value)) { // if average or cholesterol value not found
+  // Function for checking whether a cholesterol value is above-average level
+  const isAboveAverageCholesterol = (value: number | undefined): boolean => {
+    if (!averageCholesterol || !(value)) { // if average or cholesterol value not found
       return false;
     } else {
-      return patient.cholesterol.data?.value.value > averageCholesterol;
+      return value > averageCholesterol;
     }
   }
 
@@ -55,16 +57,18 @@ export default function PatientsMonitor() {
       },
       {
         Header: 'Total Cholesterol',
-        accessor: (patient: Patient)  => { return patient },
-        Cell: ({ value }: { value: Patient }) => 
-          value.cholesterol.loading ? 
-            <Spinner size={Spinner.SIZE_SMALL} /> : 
-            value.cholesterol.data === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.cholesterol.data?.value.toString()]
-        // Cell: ({ value }: { value: Patient }) => 
-        //   value.cholesterolLoading ? 
-        //     <Spinner size={Spinner.SIZE_SMALL} /> : 
-        //     value.totalCholesterol === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.totalCholesterol?.value.toString()]
-        
+        accessor: 'cholesterol.data.value.value',
+        Cell: (cellInfo: any) => {
+          const cholesterol: ClinicalData<Observation> = cellInfo.row.original.cholesterol;
+          return ( 
+          <div>
+            {cholesterol.loading ? 
+              <Spinner size={Spinner.SIZE_SMALL} /> : 
+              cholesterol.data === null ? "N/A" : 
+                [(isAboveAverageCholesterol(cholesterol.data?.value.value) && warningMarkup), cholesterol.data?.value.toString()]}
+          </div>
+          )
+        }
       },
       {
         Header: 'Time',
@@ -72,19 +76,27 @@ export default function PatientsMonitor() {
       },
       {
         Header: 'Systolic Blood Pressure',
-        accessor: (patient: Patient)  => patient,
-        Cell: ({ value }: { value: Patient }) => 
-          value.bloodPressure.loading ? 
-            <Spinner size={Spinner.SIZE_SMALL} /> : 
-            value.bloodPressure === null ? "N/A" : value.bloodPressure.data === undefined ? null : value.bloodPressure.data![0].systolic.value.toString()
+        accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].systolic.value.value },
+        Cell: (cellInfo: any) => {
+          const bloodPressure: ClinicalData<BloodPressure[]> = cellInfo.row.original.bloodPressure;
+          return (
+            bloodPressure.loading ? 
+              <Spinner size={Spinner.SIZE_SMALL} /> : 
+              bloodPressure.data === null ? "N/A" : bloodPressure.data === undefined ? null : bloodPressure.data![0].systolic.value.toString()
+          )
+        }
       }, 
       {
         Header: 'Diastolic Blood Pressure',
-        accessor: (patient: Patient)  => patient,
-        Cell: ({ value }: { value: Patient }) => 
-          value.bloodPressure.loading ? 
-            <Spinner size={Spinner.SIZE_SMALL} /> : 
-            value.bloodPressure === null ? "N/A" : value.bloodPressure.data === undefined ? null : value.bloodPressure.data![0].diastolic.value.toString()
+        accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].diastolic.value.value },
+        Cell: (cellInfo: any) => {
+          const bloodPressure: ClinicalData<BloodPressure[]> = cellInfo.row.original.bloodPressure;
+          return (
+            bloodPressure.loading ? 
+              <Spinner size={Spinner.SIZE_SMALL} /> : 
+              bloodPressure.data === null ? "N/A" : bloodPressure.data === undefined ? null : bloodPressure.data![0].diastolic.value.toString()
+          )
+        }
       },
       {
         Header: 'Time1',
