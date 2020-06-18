@@ -1,18 +1,18 @@
 import React, { useState } from 'react'
 import { Navbar, Alignment, Button, Spinner, AnchorButton, NumericInput, Position, Tag, ControlGroup } from '@blueprintjs/core'
 import PatientSelect from './PatientSelect'
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 
 import { ApplicationState } from '../store/index';
 import { Progress } from '../store/patients/types';
 import PatientsMonitor from './PatientsMonitor';
-import { setCholesterolTimer } from '../store/system/actions';
 import CholesterolBarChart from './CholesterolBarChart';
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from 'react-router-dom';
 
 /**
@@ -26,9 +26,6 @@ import {
 export default function MainContent() {
   
   const [selectDialogOpen, setSelectDialogOpen] = useState(false);    // initially hide PatientSelect
-  const [reloadTimeout, setReloadTimeout] = useState(5);              // default timeout = 5s
-
-  const dispatch = useDispatch();
   
   const toggleSelectDialog = () => { setSelectDialogOpen(!selectDialogOpen) };
 
@@ -60,19 +57,8 @@ export default function MainContent() {
           
           {/* Refresh timer */}
           <Navbar.Group align={Alignment.RIGHT}> 
-
-            <AnchorButton text="Patient" icon="plus" onClick={toggleSelectDialog}/>
             {loadingMarkup}
-
-            <ControlGroup>
-              <NumericInput 
-                buttonPosition={Position.LEFT} 
-                rightElement={<Tag minimal={true}>s</Tag>}
-                onValueChange={(value) => setReloadTimeout(value)}
-                value={reloadTimeout}
-              />
-              <Button icon="stopwatch" onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
-            </ControlGroup>
+            <AnchorButton text="Patient" icon="plus" onClick={toggleSelectDialog}/>
           </Navbar.Group>
         </Navbar>
 
@@ -80,6 +66,10 @@ export default function MainContent() {
 
         <Switch>
           
+          <Route exact path="/">
+            <PatientsMonitor />
+          </Route>
+
           <Route path="/cholesterol">
             <CholesterolBarChart />
           </Route>
@@ -88,9 +78,9 @@ export default function MainContent() {
             
           </Route>
 
-          <Route path="/">
-            <PatientsMonitor />
-          </Route>
+          {/* Redirect all 404's to home */}
+          <Redirect to='/' />
+
         </Switch>
 
         
