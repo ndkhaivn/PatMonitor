@@ -9,11 +9,11 @@ export default function CholesterolBarChart() {
   // Connect to the store to get the patient list
   let patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
   // Only display monitored patients and patients with at least one cholesterol observation
-  patients = patients.filter(patient => patient.isMonitoredCholesterol === true && patient.totalCholesterol);
+  patients = patients.filter(patient => patient.cholesterol.monitored && patient.cholesterol.data);
 
   let series = [{
     name: 'Cholesterol Level',
-    data: patients.map(patient => patient.totalCholesterol!.value.value)
+    data: patients.map(patient => patient.cholesterol.data!.value.value)
   }];
 
   let options = {

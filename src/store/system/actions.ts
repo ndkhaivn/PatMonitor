@@ -12,7 +12,7 @@ export const setCholesterolTimer = (durationInSecond: number): AppThunk<void> =>
   // Timer handler (called when timeout)
   const updateCholesterol = () => {
     const patients = getState().patients.data;
-    const monitoredPatients = patients.filter(patient => patient.isMonitored === true);
+    const monitoredPatients = patients.filter(patient => patient.cholesterol.monitored);
     monitoredPatients.forEach(patient => {
       dispatch(fetchPatientCholesterol(patient.id));
     });

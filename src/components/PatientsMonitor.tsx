@@ -17,7 +17,7 @@ export default function PatientsMonitor() {
   // Connect to the store to get the patient list
   let patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
   // Only display monitored patients
-  patients = patients.filter(patient => patient.isMonitoredCholesterol || patient.isMonitoredBloodPressure);
+  patients = patients.filter(patient => patient.cholesterol.monitored || patient.bloodPressure.monitored);
 
   const [detailDialogOpen, setDetailDialogOpen] = useState(false);
   const [displayedPatient, setDisplayedPatient] = useState(emptyPatient);
@@ -28,8 +28,8 @@ export default function PatientsMonitor() {
   let sumCholesterol = 0;
   let effectivePatientsCount = 0;
   patients.forEach(patient => {
-    if (patient.totalCholesterol?.value) { // ignore patients without cholesterol value
-      sumCholesterol += patient.totalCholesterol.value.value;
+    if (patient.cholesterol.data?.value) { // ignore patients without cholesterol value
+      sumCholesterol += patient.cholesterol.data?.value.value;
       effectivePatientsCount++;
     }
   });
@@ -37,10 +37,10 @@ export default function PatientsMonitor() {
 
   // Function for checking whether a patient has above-average cholesterol level
   const isAboveAverageCholesterol = (patient: Patient): boolean => {
-    if (!averageCholesterol || !(patient.totalCholesterol?.value.value)) { // if average or cholesterol value not found
+    if (!averageCholesterol || !(patient.cholesterol.data?.value.value)) { // if average or cholesterol value not found
       return false;
     } else {
-      return patient.totalCholesterol?.value.value > averageCholesterol;
+      return patient.cholesterol.data?.value.value > averageCholesterol;
     }
   }
 
@@ -57,33 +57,33 @@ export default function PatientsMonitor() {
         Header: 'Total Cholesterol',
         accessor: (patient: Patient)  => { return patient },
         Cell: ({ value }: { value: Patient }) => 
-          value.cholesterolLoading ? 
+          value.cholesterol.loading ? 
             <Spinner size={Spinner.SIZE_SMALL} /> : 
-            value.totalCholesterol === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.totalCholesterol?.value.toString()]
+            value.cholesterol.data === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.cholesterol.data?.value.toString()]
       },
       {
         Header: 'Time',
-        accessor: (patient: Patient)  => { return patient.totalCholesterol?.effectiveDateTime },
+        accessor: (patient: Patient)  => { return patient.cholesterol.data?.effectiveDateTime },
       },
       {
         Header: 'Systolic Blood Pressure',
         accessor: (patient: Patient)  => patient,
         Cell: ({ value }: { value: Patient }) => 
-          value.bloodPressureLoading ? 
+          value.bloodPressure.loading ? 
             <Spinner size={Spinner.SIZE_SMALL} /> : 
-            value.bloodPressure === null ? "N/A" : value.bloodPressure === undefined ? null : value.bloodPressure![0].systolic.value.toString()
+            value.bloodPressure === null ? "N/A" : value.bloodPressure.data === undefined ? null : value.bloodPressure.data![0].systolic.value.toString()
       }, 
       {
         Header: 'Diastolic Blood Pressure',
         accessor: (patient: Patient)  => patient,
         Cell: ({ value }: { value: Patient }) => 
-          value.bloodPressureLoading ? 
+          value.bloodPressure.loading ? 
             <Spinner size={Spinner.SIZE_SMALL} /> : 
-            value.bloodPressure === null ? "N/A" : value.bloodPressure === undefined ? null : value.bloodPressure![0].diastolic.value.toString()
+            value.bloodPressure === null ? "N/A" : value.bloodPressure.data === undefined ? null : value.bloodPressure.data![0].diastolic.value.toString()
       },
       {
         Header: 'Time1',
-        accessor: (patient: Patient)  => { return patient.bloodPressure?.[0].systolic.effectiveDateTime },
+        accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].systolic.effectiveDateTime },
       }
     ],
     [averageCholesterol]

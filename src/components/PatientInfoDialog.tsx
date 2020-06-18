@@ -62,12 +62,12 @@ export default function PatientInfoDialog({ isOpen, toggleOpen, patient }: { isO
 
       <div className={Classes.DIALOG_FOOTER}>
           <Switch 
-            checked={patient.isMonitoredCholesterol} 
+            checked={patient.cholesterol.monitored} 
             label="Monitor Cholesterol" 
             onChange={() => toggleSwitch(PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL)} 
           />
           <Switch 
-            checked={patient.isMonitoredBloodPressure} 
+            checked={patient.bloodPressure.monitored} 
             label="Monitor Blood Pressure" 
             onChange={() => toggleSwitch(PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE)} 
           />

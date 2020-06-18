@@ -92,14 +92,12 @@ export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => 
 
 export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<void> => async (dispatch, getState) => {
 
-  console.log(patient.id, type);
-
   if (type === PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL) {
-    if (!patient.isMonitoredCholesterol) {
+    if (!patient.cholesterol.monitored) {
       dispatch(fetchPatientCholesterol(patient.id));
     }
   } else if (type === PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE) {
-    if (!patient.isMonitoredBloodPressure) {
+    if (!patient.bloodPressure.monitored) {
       dispatch(fetchPatientBloodPressure(patient.id));
     }
   }
