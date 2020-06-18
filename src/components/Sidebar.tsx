@@ -1,11 +1,11 @@
 import React, { useState } from "react"
-import { InputGroup, Button, Navbar, Alignment, Spinner, Icon } from '@blueprintjs/core';
+import { InputGroup, Button, Navbar, Alignment, Spinner, Icon, ControlGroup, NumericInput, Position, Tag, Card, Elevation, H4, Intent } from '@blueprintjs/core';
 import { useDispatch } from 'react-redux';
 import { Identifier } from "../DataModel/Resource";
 import { fetchPractitioner } from '../store/practitioner/actions';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
-import { Intent } from '@blueprintjs/core';
+import { setCholesterolTimer, setBloodPressureThreshold } from '../store/system/actions';
 
 /**
  * Sidebar component: Contain input field for entering practitioner identifier and practitioner info
@@ -19,10 +19,20 @@ export default function Sidebar() {
   const loadingPractitioner = useSelector((state: ApplicationState) => state.practitioner.loading);
   const loadingPatients = useSelector((state: ApplicationState) => state.patients.loading);
 
+  const [reloadTimeout, setReloadTimeout] = useState(5);              // default timeout = 5s
+
+  // default threshold = 0
+  const [systolicThreshold, setSystolicThreshold] = useState(0);      
+  const [diastolicThreshold, setDiastolicThreshold] = useState(0);
+
   const dispatch = useDispatch();
   // Tell the store to fetch the practitioner with identifier
   const enterPractitioner = () => {
     dispatch(fetchPractitioner(new Identifier("http://hl7.org/fhir/sid/us-npi", practitionerIdentifier)));
+  }
+
+  const applyBloodPressureThreshold = () => {
+    dispatch(setBloodPressureThreshold(systolicThreshold, diastolicThreshold));
   }
 
   const loading = loadingPractitioner || loadingPatients;
@@ -31,7 +41,7 @@ export default function Sidebar() {
   const practitionerMarkup = 
     practitioner ? 
       <div>
-        <h2>Practitioner Info</h2>
+        <H4>Practitioner Info</H4>
         <table>
           <tbody>
             <tr>
@@ -65,20 +75,60 @@ export default function Sidebar() {
         </Navbar.Group>
       </Navbar>
 
-      {/* Enter practitioner identifier */}
-      <InputGroup
-        leftIcon="diagnosis"
-        rightElement={loading ? <Spinner size={Spinner.SIZE_SMALL}/> : <Button icon="key-enter" minimal={true} onClick={enterPractitioner}/>}
-        onChange={(event: any) => setPractitionerIdentifier(event.target.value)}
-        placeholder="Practitioner Identifier"
-        value={practitionerIdentifier}
-        large={true}
-      />
-      
-      <div className="practitioner-info">
-        {practitionerMarkup}
+      <div className="sidebar-content">
+
+        {/* Enter practitioner identifier */}
+        <InputGroup
+          leftIcon="diagnosis"
+          rightElement={loading ? <Spinner size={Spinner.SIZE_SMALL}/> : <Button icon="key-enter" minimal={true} onClick={enterPractitioner}/>}
+          onChange={(event: any) => setPractitionerIdentifier(event.target.value)}
+          placeholder="Practitioner Identifier"
+          value={practitionerIdentifier}
+          large={true}
+        />
+    
+        <Card className="sidebar-card" elevation={Elevation.TWO}>
+          {practitionerMarkup}
+        </Card>
+
+        <Card className="sidebar-card" elevation={Elevation.TWO}>
+          <H4> Reload Timer </H4>
+          <ControlGroup>
+            <NumericInput
+              fill={true}
+              buttonPosition={Position.LEFT} 
+              rightElement={<Tag minimal={true}>s</Tag>}
+              onValueChange={(value) => setReloadTimeout(value)}
+              value={reloadTimeout}
+            />
+            <Button icon="stopwatch" intent={Intent.PRIMARY} onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
+            <Button icon="cross" intent={Intent.DANGER} onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
+          </ControlGroup>
+        </Card>
+
+        <Card className="sidebar-card" elevation={Elevation.TWO}>
+          <H4> Blood Pressure Threshold </H4>
+          <NumericInput
+            fill={true}
+            buttonPosition={Position.LEFT} 
+            rightElement={<Tag minimal={true}>systolic</Tag>}
+            onValueChange={(value) => setSystolicThreshold(value)}
+            value={systolicThreshold}
+          />
+          <br />
+          <NumericInput
+            fill={true}
+            buttonPosition={Position.LEFT} 
+            rightElement={<Tag minimal={true}>diastolic</Tag>}
+            onValueChange={(value) => setDiastolicThreshold(value)}
+            value={diastolicThreshold}
+          />
+          <br />
+          <Button intent={Intent.PRIMARY} onClick={applyBloodPressureThreshold}> Apply </Button>
+        </Card>
+
       </div>
-      
+
     </div>
   )
 }

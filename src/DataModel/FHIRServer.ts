@@ -27,7 +27,6 @@ export default class FHIRServer implements DataSource {
 
   // This method takes in an array of objects and generates a list of Patients from the data
   private decodePatients(data: any[]): Patient[] {
-    console.log(data);
     return data.map(patientResource => {
       // extract required attributes
       let id = patientResource.id;

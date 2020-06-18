@@ -60,6 +60,11 @@ export default function PatientsMonitor() {
           value.cholesterol.loading ? 
             <Spinner size={Spinner.SIZE_SMALL} /> : 
             value.cholesterol.data === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.cholesterol.data?.value.toString()]
+        // Cell: ({ value }: { value: Patient }) => 
+        //   value.cholesterolLoading ? 
+        //     <Spinner size={Spinner.SIZE_SMALL} /> : 
+        //     value.totalCholesterol === null ? "N/A" : [(isAboveAverageCholesterol(value) && warningMarkup), value.totalCholesterol?.value.toString()]
+        
       },
       {
         Header: 'Time',

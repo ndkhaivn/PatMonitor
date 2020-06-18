@@ -102,11 +102,18 @@
   margin-right: 5px;
 }
 
-.practitioner-info {
+.sidebar-content {
   margin-top: 15px;
   margin-left: 15px;
+  margin-right: 15px;
+
+}
+
+.sidebar-card {
+  margin-bottom: 20px;
 }
 
 #chart {
   margin-top: 30px;
 }
+

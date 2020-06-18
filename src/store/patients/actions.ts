@@ -12,7 +12,6 @@ import { Observation, BloodPressure } from '../../DataModel/Resource';
 export const fetchPatients = (practitionerIDs: string[]): AppThunk<void> => async (dispatch) => {
 
   const progressUpdate = (data: Patient[], progress: Progress) => {
-    console.log(progress);
     dispatch({
       type: PatientsActionTypes.FETCH_PROGRESS,
       loading: progress,
