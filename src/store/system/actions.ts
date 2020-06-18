@@ -12,7 +12,7 @@ export const setCholesterolTimer = (durationInSecond: number): AppThunk<void> =>
   // Timer handler (called when timeout)
   const updateCholesterol = () => {
     const patients = getState().patients.data;
-    const monitoredPatients = patients.filter(patient => patient.isMonitored === true);
+    const monitoredPatients = patients.filter(patient => patient.cholesterol.monitored);
     monitoredPatients.forEach(patient => {
       dispatch(fetchPatientCholesterol(patient.id));
     });
@@ -25,6 +25,19 @@ export const setCholesterolTimer = (durationInSecond: number): AppThunk<void> =>
   dispatch({
     type: SystemActionTypes.SET_TIMER,
     payload: timer
+  });
+}
+
+export const setBloodPressureThreshold = (systolic: number, diastolic: number): AppThunk<void> => (dispatch) => {
+
+  dispatch({
+    type: SystemActionTypes.SET_BLOOD_PRESSURE_THRESHOLD_X,
+    payload: systolic
+  });
+
+  dispatch({
+    type: SystemActionTypes.SET_BLOOD_PRESSURE_THRESHOLD_Y,
+    payload: diastolic
   });
 
 }

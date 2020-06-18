@@ -1,4 +1,5 @@
 import { Name, Address, Observation, BloodPressure } from './Resource';
+import ClinicalData from './ClinicalData';
 /**
  * Class that represents a Patient in the medical record system
  *
@@ -11,12 +12,9 @@ export default class Patient {
   gender: string
   birthDate: string
   address: Address[]
-  isMonitoredCholesterol: boolean;
-  isMonitoredBloodPressure: boolean;
-  totalCholesterol: Observation | undefined | null;
-  cholesterolLoading: boolean;
-  bloodPressure: BloodPressure[] | undefined | null;
-  bloodPressureLoading: boolean;
+
+  cholesterol: ClinicalData<Observation>
+  bloodPressure: ClinicalData<BloodPressure[]>
 
   /**
    *Creates an instance of Patient.
@@ -33,9 +31,7 @@ export default class Patient {
     this.gender = gender;
     this.birthDate = birthDate;
     this.address = address;
-    this.isMonitoredCholesterol = false;
-    this.isMonitoredBloodPressure = false;
-    this.cholesterolLoading = false;
-    this.bloodPressureLoading = false;
+    this.cholesterol = new ClinicalData<Observation>();
+    this.bloodPressure = new ClinicalData<BloodPressure[]>();
   }
 }

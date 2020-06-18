@@ -46,7 +46,7 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
         Cell: ({ value }: { value: Patient }) => { 
           return <Checkbox 
             large={true}
-            checked={value.isMonitoredCholesterol} 
+            checked={value.cholesterol.monitored} 
             onChange={() => clickMonitorPatient(value, PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL) } 
           />
         } 
@@ -57,7 +57,7 @@ export default function PatientSelect({ isOpen, toggleOpen } : { isOpen: boolean
         Cell: ({ value }: { value: Patient }) => { 
           return <Checkbox 
             large={true}
-            checked={value.isMonitoredBloodPressure} 
+            checked={value.bloodPressure.monitored} 
             onChange={() => clickMonitorPatient(value, PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE) } 
           />
         } 

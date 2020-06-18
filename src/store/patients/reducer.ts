@@ -30,7 +30,7 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
       // toggle monitoring cholesterol this patient
-      newData[idx].isMonitoredCholesterol = !newData[idx].isMonitoredCholesterol;
+      newData[idx].cholesterol.monitored = !newData[idx].cholesterol.monitored;
       return { ...state, data: newData};
     }
     case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE: {
@@ -38,37 +38,37 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
       // toggle monitoring blood pressure this patient
-      newData[idx].isMonitoredBloodPressure = !newData[idx].isMonitoredBloodPressure;
+      newData[idx].bloodPressure.monitored = !newData[idx].bloodPressure.monitored;
       return { ...state, data: newData};
     }
     case PatientsActionTypes.FETCH_CHOLESTEROL_REQUEST: {
       // find index of target patient & set cholesterol loading
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      newData[idx].cholesterolLoading = true;
+      newData[idx].cholesterol.loading = true;
       return { ...state, data: newData };
     }
     case PatientsActionTypes.FETCH_CHOLESTEROL_DONE: {
       // find index of target patient & set result cholesterol
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      newData[idx].cholesterolLoading = false;
-      newData[idx].totalCholesterol = action.payload;
+      newData[idx].cholesterol.loading = false;
+      newData[idx].cholesterol.data = action.payload;
       return { ...state, data: newData };
     }
     case PatientsActionTypes.FETCH_BLOOD_PRESSURE_REQUEST: {
       // find index of target patient & set blood pressure loading
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      newData[idx].bloodPressureLoading = true;
+      newData[idx].bloodPressure.loading = true;
       return { ...state, data: newData };
     }
     case PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE: {
       // find index of target patient & set result blood pressure
       let newData = [ ...state.data ];
       let idx = indexOfPatient(newData, action.patientId);
-      newData[idx].bloodPressureLoading = false;
-      newData[idx].bloodPressure = action.payload;
+      newData[idx].bloodPressure.loading = false;
+      newData[idx].bloodPressure.data = action.payload;
       return { ...state, data: newData };
     }
     default:

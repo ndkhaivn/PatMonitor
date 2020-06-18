@@ -12,7 +12,6 @@ import { Observation, BloodPressure } from '../../DataModel/Resource';
 export const fetchPatients = (practitionerIDs: string[]): AppThunk<void> => async (dispatch) => {
 
   const progressUpdate = (data: Patient[], progress: Progress) => {
-    console.log(progress);
     dispatch({
       type: PatientsActionTypes.FETCH_PROGRESS,
       loading: progress,
@@ -92,15 +91,25 @@ export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => 
 
 export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<void> => async (dispatch, getState) => {
 
-  console.log(patient.id, type);
-
   if (type === PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL) {
-    if (!patient.isMonitoredCholesterol) {
+    if (!patient.cholesterol.monitored) {
       dispatch(fetchPatientCholesterol(patient.id));
+    } else {
+      dispatch({
+        type: PatientsActionTypes.FETCH_CHOLESTEROL_DONE,
+        patientId: patient.id,
+        payload: undefined
+      });
     }
   } else if (type === PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE) {
-    if (!patient.isMonitoredBloodPressure) {
+    if (!patient.bloodPressure.monitored) {
       dispatch(fetchPatientBloodPressure(patient.id));
+    } else {
+      dispatch({
+        type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE,
+        patientId: patient.id,
+        payload: undefined
+      });
     }
   }
 
