@@ -94,10 +94,22 @@ export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<v
   if (type === PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL) {
     if (!patient.cholesterol.monitored) {
       dispatch(fetchPatientCholesterol(patient.id));
+    } else {
+      dispatch({
+        type: PatientsActionTypes.FETCH_CHOLESTEROL_DONE,
+        patientId: patient.id,
+        payload: undefined
+      });
     }
   } else if (type === PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE) {
     if (!patient.bloodPressure.monitored) {
       dispatch(fetchPatientBloodPressure(patient.id));
+    } else {
+      dispatch({
+        type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE,
+        patientId: patient.id,
+        payload: undefined
+      });
     }
   }
 
