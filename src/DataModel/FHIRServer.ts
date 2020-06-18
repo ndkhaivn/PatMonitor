@@ -27,7 +27,6 @@ export default class FHIRServer implements DataSource {
 
   // This method takes in an array of objects and generates a list of Patients from the data
   private decodePatients(data: any[]): Patient[] {
-    console.log(data);
     return data.map(patientResource => {
       // extract required attributes
       let id = patientResource.id;
@@ -45,6 +44,7 @@ export default class FHIRServer implements DataSource {
     let practitionerResource = data[0];
     let identifier = new Identifier(practitionerResource.identifier.system, practitionerResource.identifier.value)
     let ids = data.map(practitioner => practitioner.id);
+    console.log(data, ids);
     let name = (practitionerResource.name as any[]).map(nameResource => new Name(nameResource.family, nameResource.given, nameResource.prefix, nameResource.use));
     let address = (practitionerResource.address as any[]).map(addressResource => new Address(addressResource.line, addressResource.city, addressResource.state, addressResource.postalCode, addressResource.country));
     console.log(practitionerResource)
@@ -77,6 +77,7 @@ export default class FHIRServer implements DataSource {
     }
 
     return this.decodePractitioner(resources);
+    
   }
 
   /**
@@ -141,8 +142,20 @@ export default class FHIRServer implements DataSource {
     coding = new Coding(coding.code, coding.display, coding.system);
     return new Observation(value, effectiveDateTime, coding);
   }
-  
+
+  /**
+   *
+   *
+   * @param {string} patientID unique ID corresponding to target Patient
+   * @param {number} count number representing number of observations wanting to be obtained
+   * @returns {(Promise<BloodPressure[] | null>)} returns array of Blood Pressure readings, ordered from newest to oldest
+   * @memberof FHIRServer
+   */
   async getBloodPressure(patientID: string, count: number): Promise<BloodPressure[] | null> {
+    // defined codes for blood pressure readings
+    let codeSystem = "http://loinc.org";
+    let diastolicCode = "8462-4";
+    let systolicCode = "8480-6";
 
     let bloodPressures;
 
@@ -151,25 +164,28 @@ export default class FHIRServer implements DataSource {
       `${this.rootUrl}/Observation?patient=${patientID}&code=55284-4&_sort=-date&_count=` + count
     )
       
-
+    
     if (response.data.entry) {
+      // if the patient has blood pressure records
       bloodPressures = [];
       let entries = response.data.entry as Array<any>;
       entries = entries.map(entry => entry.resource);
 
+      // create BloodPressure object for each reading
       entries.forEach(observation => {
         let effectiveDateTime, value, coding;
         effectiveDateTime = observation.effectiveDateTime;
+        let components = observation.component as Array<any>;
 
         // create Diastolic Observation
-        let diastolicObs = observation.component[0];
+        let diastolicObs = components.find(comp => comp.code.coding[0].code === diastolicCode && comp.code.coding[0].system === codeSystem);
         value = new Measurement(diastolicObs.valueQuantity.unit, diastolicObs.valueQuantity.value);
         coding = diastolicObs.code.coding[0];
         coding = new Coding(coding.code, coding.display, coding.system);
         diastolicObs = new Observation(value, effectiveDateTime, coding);
 
         // create Systolic Observation
-        let systolicObs = observation.component[1]
+        let systolicObs = components.find(comp => comp.code.coding[0].code === systolicCode && comp.code.coding[0].system === codeSystem);
         value = new Measurement(systolicObs.valueQuantity.unit, systolicObs.valueQuantity.value);
         coding = systolicObs.code.coding[0];
         coding = new Coding(coding.code, coding.display, coding.system);
@@ -184,10 +200,7 @@ export default class FHIRServer implements DataSource {
       bloodPressures = null;
     }
 
-    
-
     return bloodPressures;
-
   }
 
 }

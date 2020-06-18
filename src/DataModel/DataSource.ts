@@ -39,6 +39,14 @@ export interface DataSource {
      */
     getCholesterol(patientID: string): Promise<Observation | null>;
 
+    /**
+     *
+     *
+     * @param {string} patientID unique ID corresponding to target Patient
+     * @param {number} count number representing number of observations wanting to be obtained
+     * @returns {(Promise<BloodPressure[] | null>)} returns array of Blood Pressure readings, ordered from newest to oldest
+     * @memberof FHIRServer
+     */
     getBloodPressure(patientID: string, count: number): Promise<BloodPressure[] | null>;
 
 }

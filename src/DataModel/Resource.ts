@@ -138,6 +138,7 @@ export class Observation {
  *Creates an instance of Observation.
  * @param {Measurement} value Measurement that represents the measurement taken during the Observation
  * @param {string} effectiveDateTime string representing the time that the Observation occurred
+ * @param {Coding} coding Coding object that is associated with the Observation
  * @memberof Observation
  */
 constructor(value: Measurement, effectiveDateTime: string, coding: Coding) {
@@ -146,24 +147,45 @@ constructor(value: Measurement, effectiveDateTime: string, coding: Coding) {
     this.coding = coding;
   }
 }
-
+/**
+ * Class representing an identifier attached to a resource in the FHIR system 
+ *
+ * @export
+ * @class Coding
+ */
 export class Coding {
   code: string
   display: string
   system: string
-
-  constructor(code: string, display: string, system: string) {
+/**
+ *Creates an instance of Coding.
+ * @param {string} code a string representing the sequence that denotes the identifier
+ * @param {string} display the associated displayable text to the code
+ * @param {string} system the system from which the code is derived
+ * @memberof Coding
+ */
+constructor(code: string, display: string, system: string) {
     this.code = code;
     this.display = display;
     this.system = system;
   }
 }
-
+/**
+ * Class representing a blood pressure record
+ *
+ * @export
+ * @class BloodPressure
+ */
 export class BloodPressure {
   diastolic: Observation
   systolic: Observation
-
-  constructor(diastolic: Observation, systolic: Observation) {
+/**
+ *Creates an instance of BloodPressure.
+ * @param {Observation} diastolic an Observation representing the diastolic blood pressure reading
+ * @param {Observation} systolic and Observation representing the systolic blood pressure reading
+ * @memberof BloodPressure
+ */
+constructor(diastolic: Observation, systolic: Observation) {
     this.diastolic = diastolic;
     this.systolic = systolic;
   }
