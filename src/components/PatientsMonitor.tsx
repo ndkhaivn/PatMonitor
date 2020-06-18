@@ -18,6 +18,10 @@ export default function PatientsMonitor() {
 
   // Connect to the store to get the patient list
   let patients: Patient[] = useSelector((state: ApplicationState) => state.patients.data);
+
+  let systolicThreshold = useSelector((state: ApplicationState) => state.system.systolicThreshold);
+  let diastolicThreshold = useSelector((state: ApplicationState) => state.system.diastolicThreshold);
+
   // Only display monitored patients
   patients = patients.filter(patient => patient.cholesterol.monitored || patient.bloodPressure.monitored);
 
@@ -46,7 +50,8 @@ export default function PatientsMonitor() {
     }
   }
 
-  const warningMarkup = <Icon icon="warning-sign" intent={Intent.WARNING}/>
+  const warningIcon = <Icon icon="warning-sign" intent={Intent.WARNING}/>
+  const spinnerMarkup = <Spinner size={Spinner.SIZE_SMALL} />
 
   // Columns that will be passed into PatientsTable
   const columns = React.useMemo(
@@ -60,12 +65,13 @@ export default function PatientsMonitor() {
         accessor: 'cholesterol.data.value.value',
         Cell: (cellInfo: any) => {
           const cholesterol: ClinicalData<Observation> = cellInfo.row.original.cholesterol;
+          const warningMarkup = (isAboveAverageCholesterol(cholesterol.data?.value.value) && warningIcon);
           return ( 
-          <div>
-            {cholesterol.loading ? 
-              <Spinner size={Spinner.SIZE_SMALL} /> : 
+          <div>{ 
+            cholesterol.loading ? 
+              spinnerMarkup : 
               cholesterol.data === null ? "N/A" : 
-                [(isAboveAverageCholesterol(cholesterol.data?.value.value) && warningMarkup), cholesterol.data?.value.toString()]}
+                [warningMarkup, cholesterol.data?.value.toString()]}
           </div>
           )
         }
@@ -79,10 +85,12 @@ export default function PatientsMonitor() {
         accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].systolic.value.value },
         Cell: (cellInfo: any) => {
           const bloodPressure: ClinicalData<BloodPressure[]> = cellInfo.row.original.bloodPressure;
+          const warningMarkup = (systolicThreshold !== undefined && bloodPressure.data?.[0].systolic.value.value! >= systolicThreshold && warningIcon);
           return (
             bloodPressure.loading ? 
-              <Spinner size={Spinner.SIZE_SMALL} /> : 
-              bloodPressure.data === null ? "N/A" : bloodPressure.data === undefined ? null : bloodPressure.data![0].systolic.value.toString()
+              spinnerMarkup : 
+              bloodPressure.data === null ? "N/A" : 
+                [warningMarkup, bloodPressure.data?.[0].systolic.value.toString()]
           )
         }
       }, 
@@ -91,10 +99,12 @@ export default function PatientsMonitor() {
         accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].diastolic.value.value },
         Cell: (cellInfo: any) => {
           const bloodPressure: ClinicalData<BloodPressure[]> = cellInfo.row.original.bloodPressure;
+          const warningMarkup = (diastolicThreshold !== undefined && bloodPressure.data?.[0].diastolic.value.value! >= diastolicThreshold && warningIcon);
           return (
             bloodPressure.loading ? 
-              <Spinner size={Spinner.SIZE_SMALL} /> : 
-              bloodPressure.data === null ? "N/A" : bloodPressure.data === undefined ? null : bloodPressure.data![0].diastolic.value.toString()
+            spinnerMarkup : 
+              bloodPressure.data === null ? "N/A" : 
+              [warningMarkup, bloodPressure.data?.[0].diastolic.value.toString()]
           )
         }
       },
@@ -103,7 +113,7 @@ export default function PatientsMonitor() {
         accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].systolic.effectiveDateTime },
       }
     ],
-    [averageCholesterol]
+    [averageCholesterol, systolicThreshold, diastolicThreshold]
   );
 
   const noDataMessage = "You are not monitoring any patients, add new patients to monitor";
