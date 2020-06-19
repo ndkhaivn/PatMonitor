@@ -101,6 +101,14 @@ export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => 
   });
 }
 
+/**
+*
+* Toggle monitoring a patient on/off (cholesterol | blood pressure | blood pressure history)
+* Also fetch the data when turning on
+* @param {Patient} patient
+* @param {string} type
+* @returns {AppThunk<void>}
+*/
 export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<void> => async (dispatch, getState) => {
 
   dispatch({
@@ -110,7 +118,8 @@ export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<v
 
   switch (type) {
     case PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL: 
-      if (patient.cholesterol.monitored) {
+      // if monitored now, then fetch the data
+      if (patient.cholesterol.monitored) { 
         dispatch(fetchPatientCholesterol(patient.id));
       } else {
         dispatch({
@@ -122,6 +131,7 @@ export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<v
       break;
     
     case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE: 
+      // if monitored now, then fetch the data
       if (patient.bloodPressure.monitored) {
         dispatch(fetchPatientBloodPressure(patient.id));
       } else {
@@ -141,6 +151,7 @@ export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<v
       break;
     
     case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE_HISTORY:
+      // if monitored now, then fetch the data
       if (patient.historyMonitored) {
         dispatch(fetchPatientBloodPressure(patient.id));
       }

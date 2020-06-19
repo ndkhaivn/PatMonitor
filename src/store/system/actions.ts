@@ -3,7 +3,7 @@ import { SystemActionTypes } from './types';
 import { fetchPatientCholesterol, fetchPatientBloodPressure } from '../patients/actions';
 
 /**
- * Start a timer for refreshing cholesterol dadta (stop the old timer if exist)
+ * Start a timer for refreshing cholesterol data (stop the old timer if exist)
  * @param {number} durationInSecond
  * @returns {AppThunk<void>}
  */
@@ -42,7 +42,14 @@ export const setUpdateTimer = (durationInSecond: number): AppThunk<void> => (dis
   });
 }
 
-export const setBloodPressureThreshold = (systolic: number, diastolic: number): AppThunk<void> => (dispatch) => {
+export /**
+ * 
+ * Set the blood pressure threshold, values above these threshold will be highlighted
+ * @param {number} systolic
+ * @param {number} diastolic
+ * @returns {AppThunk<void>}
+ */
+const setBloodPressureThreshold = (systolic: number, diastolic: number): AppThunk<void> => (dispatch) => {
 
   dispatch({
     type: SystemActionTypes.SET_BLOOD_PRESSURE_THRESHOLD_X,

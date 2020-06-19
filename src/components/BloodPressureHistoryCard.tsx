@@ -6,16 +6,24 @@ import { useDispatch } from 'react-redux';
 import { toggleMonitorPatient } from '../store/patients/actions';
 import { PatientsActionTypes } from '../store/patients/types';
 
+/**
+ *
+ * BloodPressureHistoryCard component
+ * Display a view with textual & graphical blood pressure history
+ */
 export default function BloodPressureHistoryCard({ patient } : { patient: Patient }) {
 
   const dispatch = useDispatch();
+  // Stop monitoring history for this patient
   const closeHistory = () => {
     dispatch(toggleMonitorPatient(patient, PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE_HISTORY));
   }
 
   const history = patient.bloodPressure.data ? [...patient.bloodPressure.data] : [];
+  // Reverse the order (order from store is newest -> oldest)
   history.reverse();
 
+  // chart options
   const options = React.useMemo(() => ({
     chart: {
       height: 250,
@@ -36,14 +44,23 @@ export default function BloodPressureHistoryCard({ patient } : { patient: Patien
       labels: {
         show: false
       }
-    }
+    },
+    tooltip: {
+      y: {
+        formatter: function (val: string) {
+          return val + " mm[Hg]";
+        }
+      }
+    },
   }), [history]);
 
+  // chart data
   const series = [{
     name: "Blood Pressure",
     data: history?.map(obs => obs.systolic.value.value)
   }]
 
+  // textual logs
   const historyLog = patient.bloodPressure.loading ? <Spinner /> : 
     history?.map(obs => 
       <p className="bp3-monospace-text">

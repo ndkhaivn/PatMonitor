@@ -5,6 +5,11 @@ import Patient from '../DataModel/Patient';
 import { ApplicationState } from '../store/index';
 import { H3 } from '@blueprintjs/core';
 
+/**
+*
+* BloodPressureHistoryMonitor component
+* Monitor all patients that are being monitored by the blood pressure history
+*/
 export default function BloodPressureHistoryMonitor() {
 
   // Connect to the store to get the patient list
