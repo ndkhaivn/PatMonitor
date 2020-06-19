@@ -51,7 +51,7 @@ export default function BloodPressureHistoryCard({ patient } : { patient: Patien
           <H5> { patient.name[0].toString() } </H5>
           { history?.map(obs => 
             <p className="bp3-monospace-text">
-              {obs.systolic.effectiveDateTime} {obs.systolic.value.toString()}
+              [{obs.systolic.effectiveDateTime}] {obs.systolic.value.toString()}
             </p>
           )}
         </div>
