@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
 import { setUpdateTimer, setBloodPressureThreshold } from '../store/system/actions';
 import { SystemActionTypes } from "../store/system/types";
+import CountdownTimer from "./CountdownTimer";
 
 /**
  * Sidebar component: Contain input field for entering practitioner identifier and practitioner info
@@ -94,6 +95,7 @@ export default function Sidebar() {
 
         <Card className="sidebar-card" elevation={Elevation.TWO}>
           <H4> Update Timer </H4>
+          <CountdownTimer />
           <ControlGroup>
             <NumericInput
               fill={true}

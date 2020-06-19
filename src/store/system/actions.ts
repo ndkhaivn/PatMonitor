@@ -18,15 +18,27 @@ export const setUpdateTimer = (durationInSecond: number): AppThunk<void> => (dis
 
     const bloodPressurePatients = patients.filter(patient => patient.bloodPressure.monitored);
     bloodPressurePatients.forEach(patient => { dispatch(fetchPatientBloodPressure(patient.id)) });
+
+    dispatch({
+      type: SystemActionTypes.SET_TIME_LEFT,
+      payload: durationInSecond
+    });
   }
 
   // Setup new timer
   const timer = setInterval(updateClinicalData, durationInSecond * 1000);
 
+  const countdownTimer = setInterval(() => dispatch({ type: SystemActionTypes.COUNTDOWN }), 1000);
+
+  dispatch({
+    type: SystemActionTypes.SET_TIME_LEFT,
+    payload: durationInSecond
+  });
   // Store the new timer
   dispatch({
     type: SystemActionTypes.SET_TIMER,
-    payload: timer
+    payload: timer,
+    countdown: countdownTimer
   });
 }
 
