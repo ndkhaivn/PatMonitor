@@ -3,6 +3,7 @@ import { PatientsActionTypes, Progress } from './types';
 import Patient from '../../DataModel/Patient';
 import { AppThunk } from '..';
 import { Observation, BloodPressure } from '../../DataModel/Resource';
+import { ApplicationState } from '../index';
 
 const HISTORY_COUNT = 5;
 
@@ -73,7 +74,16 @@ export const fetchPatientCholesterol = (patientId: string): AppThunk<void> => as
 * @param {string} patientId
 * @returns {AppThunk<void>}
 */
-export const fetchPatientBloodPressure = (patientId: string, count: number): AppThunk<void> => async (dispatch) => {
+export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => async (dispatch, getState) => {
+
+  let count = 1;
+  const patients = getState().patients.data;
+  let idx = patients.findIndex(patient => patient.id === patientId);
+  const patient = patients[idx];
+  if (patient.historyMonitored) {
+    count = HISTORY_COUNT;
+  }
+
   // Set loading
   dispatch({
     type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_REQUEST,
@@ -93,9 +103,14 @@ export const fetchPatientBloodPressure = (patientId: string, count: number): App
 
 export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<void> => async (dispatch, getState) => {
 
+  dispatch({
+    type: type,
+    patientId: patient.id
+  })
+
   switch (type) {
     case PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL: 
-      if (!patient.cholesterol.monitored) {
+      if (patient.cholesterol.monitored) {
         dispatch(fetchPatientCholesterol(patient.id));
       } else {
         dispatch({
@@ -107,8 +122,8 @@ export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<v
       break;
     
     case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE: 
-      if (!patient.bloodPressure.monitored) {
-        dispatch(fetchPatientBloodPressure(patient.id, 1));
+      if (patient.bloodPressure.monitored) {
+        dispatch(fetchPatientBloodPressure(patient.id));
       } else {
         dispatch({
           type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE,
@@ -126,15 +141,10 @@ export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<v
       break;
     
     case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE_HISTORY:
-      if (!patient.historyMonitored) {
-        dispatch(fetchPatientBloodPressure(patient.id, HISTORY_COUNT));
+      if (patient.historyMonitored) {
+        dispatch(fetchPatientBloodPressure(patient.id));
       }
       break;
   }
-
-  dispatch({
-    type: type,
-    patientId: patient.id
-  })
 
 }

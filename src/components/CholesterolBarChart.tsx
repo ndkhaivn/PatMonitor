@@ -14,7 +14,12 @@ export default function CholesterolBarChart() {
 
   let series = [{
     name: 'Cholesterol Level',
-    data: patients.map(patient => patient.cholesterol.data!.value.value)
+    data: patients.map(patient => {
+      if (patient.cholesterol.loading) {
+        return 0
+      }
+      return patient.cholesterol.data!.value.value
+    })
   }];
 
   let options = {

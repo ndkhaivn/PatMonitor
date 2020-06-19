@@ -1,6 +1,6 @@
 import { AppThunk } from '..';
 import { SystemActionTypes } from './types';
-import { fetchPatientCholesterol } from '../patients/actions';
+import { fetchPatientCholesterol, fetchPatientBloodPressure } from '../patients/actions';
 
 /**
  * Start a timer for refreshing cholesterol dadta (stop the old timer if exist)
@@ -10,16 +10,17 @@ import { fetchPatientCholesterol } from '../patients/actions';
 export const setCholesterolTimer = (durationInSecond: number): AppThunk<void> => (dispatch, getState) => {
 
   // Timer handler (called when timeout)
-  const updateCholesterol = () => {
+  const updateClinicalData = () => {
     const patients = getState().patients.data;
-    const monitoredPatients = patients.filter(patient => patient.cholesterol.monitored);
+    const monitoredPatients = patients.filter(patient => patient.cholesterol.monitored || patient.bloodPressure.monitored);
     monitoredPatients.forEach(patient => {
       dispatch(fetchPatientCholesterol(patient.id));
+      dispatch(fetchPatientBloodPressure(patient.id));
     });
   }
 
   // Setup new timer
-  const timer = setInterval(updateCholesterol, durationInSecond * 1000);
+  const timer = setInterval(updateClinicalData, durationInSecond * 1000);
 
   // Store the new timer
   dispatch({

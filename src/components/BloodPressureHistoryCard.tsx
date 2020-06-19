@@ -1,6 +1,6 @@
 import React from 'react';
 import Patient from '../DataModel/Patient';
-import { Button, Card, Elevation, H5, Intent } from '@blueprintjs/core';
+import { Button, Card, Elevation, H5, Intent, Spinner } from '@blueprintjs/core';
 import ReactApexChart from 'react-apexcharts';
 import { useDispatch } from 'react-redux';
 import { toggleMonitorPatient } from '../store/patients/actions';
@@ -44,16 +44,18 @@ export default function BloodPressureHistoryCard({ patient } : { patient: Patien
     data: history?.map(obs => obs.systolic.value.value)
   }]
 
+  const historyLog = patient.bloodPressure.loading ? <Spinner /> : 
+    history?.map(obs => 
+      <p className="bp3-monospace-text">
+        [{obs.systolic.effectiveDateTime}] {obs.systolic.value.toString()}
+      </p>
+    )
   return (
     <Card interactive={true} elevation={Elevation.TWO} className="history-card">
       <div className="history-card-content">
         <div>
           <H5> { patient.name[0].toString() } </H5>
-          { history?.map(obs => 
-            <p className="bp3-monospace-text">
-              [{obs.systolic.effectiveDateTime}] {obs.systolic.value.toString()}
-            </p>
-          )}
+          { historyLog }
         </div>
         <div>
           <ReactApexChart options={options} series={series} type="line" height={250} />
