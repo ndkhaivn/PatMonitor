@@ -3,6 +3,7 @@ import BloodPressureHistoryCard from './BloodPressureHistoryCard';
 import { useSelector } from 'react-redux';
 import Patient from '../DataModel/Patient';
 import { ApplicationState } from '../store/index';
+import { H3 } from '@blueprintjs/core';
 
 export default function BloodPressureHistoryMonitor() {
 
@@ -12,7 +13,8 @@ export default function BloodPressureHistoryMonitor() {
   patients = patients.filter(patient => patient.bloodPressure.monitored && patient.historyMonitored );
 
   return (
-    <div>
+    <div id="blood-pressure-history">
+      <H3 className="text-center"> HIGH BLOOD PRESSURE MONITOR </H3>
       { patients.map(patient => <BloodPressureHistoryCard patient={patient} />) }
     </div>
   )

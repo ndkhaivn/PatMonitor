@@ -36,8 +36,8 @@ export default function MainContent() {
   const loadingMarkup = 
     loading === false ? null : 
     [
-      <div className="progress"> <Spinner size={Spinner.SIZE_SMALL} /> </div>,
-      <div className="progress"> Loading... ({(loading as Progress).loaded ?? 0}{(loading as Progress).total ? "/" + (loading as Progress).total : ""})</div>
+      <div className="progress" key="spinner"> <Spinner size={Spinner.SIZE_SMALL} /> </div>,
+      <div className="progress" key="loading"> Loading... ({(loading as Progress).loaded ?? 0}{(loading as Progress).total ? "/" + (loading as Progress).total : ""})</div>
     ]
 
   return (

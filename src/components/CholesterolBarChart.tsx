@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
 import Patient from '../DataModel/Patient';
 import ReactApexChart from 'react-apexcharts';
+import { H3 } from '@blueprintjs/core';
 
 export default function CholesterolBarChart() {
 
@@ -40,6 +41,7 @@ export default function CholesterolBarChart() {
 
   return (
     <div id="chart">
+      <H3 className="text-center"> CHOLESTEROL MONITOR </H3>
       {patients.length > 0 && <ReactApexChart options={options} series={series} type="bar" height={500} />}
     </div>
   )

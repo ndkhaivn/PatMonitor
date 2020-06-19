@@ -44,10 +44,8 @@ export default class FHIRServer implements DataSource {
     let practitionerResource = data[0];
     let identifier = new Identifier(practitionerResource.identifier.system, practitionerResource.identifier.value)
     let ids = data.map(practitioner => practitioner.id);
-    console.log(data, ids);
     let name = (practitionerResource.name as any[]).map(nameResource => new Name(nameResource.family, nameResource.given, nameResource.prefix, nameResource.use));
     let address = (practitionerResource.address as any[]).map(addressResource => new Address(addressResource.line, addressResource.city, addressResource.state, addressResource.postalCode, addressResource.country));
-    console.log(practitionerResource)
     return new Practitioner(identifier, ids, name, address);
   }
 
