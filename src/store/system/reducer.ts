@@ -20,6 +20,19 @@ const reducer: Reducer<SystemState> = (state = initialState, action) => {
         timer: action.payload 
       }
     }
+    case SystemActionTypes.STOP_TIMER: {
+
+      if (state.timer) {
+        // Stop the old timer
+        clearInterval(state.timer);
+      }
+
+      // Without any new timer
+      return {
+        ...state,
+        timer: undefined
+      }
+    }
     case SystemActionTypes.SET_BLOOD_PRESSURE_THRESHOLD_X: {
       return {
         ...state,

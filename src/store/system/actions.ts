@@ -7,7 +7,7 @@ import { fetchPatientCholesterol, fetchPatientBloodPressure } from '../patients/
  * @param {number} durationInSecond
  * @returns {AppThunk<void>}
  */
-export const setCholesterolTimer = (durationInSecond: number): AppThunk<void> => (dispatch, getState) => {
+export const setUpdateTimer = (durationInSecond: number): AppThunk<void> => (dispatch, getState) => {
 
   // Timer handler (called when timeout)
   const updateClinicalData = () => {

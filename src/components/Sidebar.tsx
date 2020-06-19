@@ -5,7 +5,8 @@ import { Identifier } from "../DataModel/Resource";
 import { fetchPractitioner } from '../store/practitioner/actions';
 import { useSelector } from 'react-redux';
 import { ApplicationState } from '../store/index';
-import { setCholesterolTimer, setBloodPressureThreshold } from '../store/system/actions';
+import { setUpdateTimer, setBloodPressureThreshold } from '../store/system/actions';
+import { SystemActionTypes } from "../store/system/types";
 
 /**
  * Sidebar component: Contain input field for entering practitioner identifier and practitioner info
@@ -19,7 +20,7 @@ export default function Sidebar() {
   const loadingPractitioner = useSelector((state: ApplicationState) => state.practitioner.loading);
   const loadingPatients = useSelector((state: ApplicationState) => state.patients.loading);
 
-  const [reloadTimeout, setReloadTimeout] = useState(5);              // default timeout = 5s
+  const [reloadTimeout, setReloadTimeout] = useState(10);              // default timeout = 10s
 
   // default threshold = 0
   const [systolicThreshold, setSystolicThreshold] = useState(0);      
@@ -92,7 +93,7 @@ export default function Sidebar() {
         </Card>
 
         <Card className="sidebar-card" elevation={Elevation.TWO}>
-          <H4> Reload Timer </H4>
+          <H4> Update Timer </H4>
           <ControlGroup>
             <NumericInput
               fill={true}
@@ -101,8 +102,8 @@ export default function Sidebar() {
               onValueChange={(value) => setReloadTimeout(value)}
               value={reloadTimeout}
             />
-            <Button icon="stopwatch" intent={Intent.PRIMARY} onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
-            <Button icon="cross" intent={Intent.DANGER} onClick={ () => dispatch(setCholesterolTimer(reloadTimeout)) }/>
+            <Button icon="stopwatch" intent={Intent.PRIMARY} onClick={ () => dispatch(setUpdateTimer(reloadTimeout)) }/>
+            <Button icon="cross" intent={Intent.DANGER} onClick={ () => dispatch({ type: SystemActionTypes.STOP_TIMER }) }/>
           </ControlGroup>
         </Card>
 
