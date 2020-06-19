@@ -41,6 +41,14 @@ const reducer: Reducer<PatientsState> = (state = initialState, action) => {
       newData[idx].bloodPressure.monitored = !newData[idx].bloodPressure.monitored;
       return { ...state, data: newData};
     }
+    case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE_HISTORY: {
+      // find the index of target patient
+      let newData = [ ...state.data ];
+      let idx = indexOfPatient(newData, action.patientId);
+      // toggle monitoring blood pressure this patient
+      newData[idx].historyMonitored = !newData[idx].historyMonitored;
+      return { ...state, data: newData};
+    }
     case PatientsActionTypes.FETCH_CHOLESTEROL_REQUEST: {
       // find index of target patient & set cholesterol loading
       let newData = [ ...state.data ];

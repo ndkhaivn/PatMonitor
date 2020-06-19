@@ -12,7 +12,7 @@ export default class Patient {
   gender: string
   birthDate: string
   address: Address[]
-
+  historyMonitored: boolean
   cholesterol: ClinicalData<Observation>
   bloodPressure: ClinicalData<BloodPressure[]>
 
@@ -31,6 +31,7 @@ export default class Patient {
     this.gender = gender;
     this.birthDate = birthDate;
     this.address = address;
+    this.historyMonitored = false;
     this.cholesterol = new ClinicalData<Observation>();
     this.bloodPressure = new ClinicalData<BloodPressure[]>();
   }

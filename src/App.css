@@ -117,3 +117,15 @@
   margin-top: 30px;
 }
 
+.history-card {
+  margin: 20px;
+}
+
+.history-card-content {
+  display: grid;
+  grid-template-columns: 2fr 3fr 0fr
+}
+
+.history-card-content > div:first-of-type {
+  border-right: 1px solid rgba(16,22,26,.15)
+}

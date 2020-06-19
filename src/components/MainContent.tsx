@@ -14,6 +14,7 @@ import {
   Link,
   Redirect
 } from 'react-router-dom';
+import BloodPressureHistoryMonitor from './BloodPressureHistoryMonitor';
 
 /**
  *
@@ -75,7 +76,7 @@ export default function MainContent() {
           </Route>
 
           <Route path="/blood-pressure">
-            
+            <BloodPressureHistoryMonitor />
           </Route>
 
           {/* Redirect all 404's to home */}

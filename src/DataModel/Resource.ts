@@ -5,8 +5,8 @@
  * @class Identifier
  */
 export class Identifier {
-  system: string
-  value: string
+  system: string;
+  value: string;
 
   /**
    *Creates an instance of Identifier.
@@ -18,10 +18,10 @@ export class Identifier {
     this.system = system;
     this.value = value;
   }
- 
+
   /**
    * Returns a string containing the system and value of the Identifier
-   * 
+   *
    * @returns {string} returns a string with concatenated system and value
    * @memberof Identifier
    */
@@ -36,22 +36,28 @@ export class Identifier {
  * @class Address
  */
 export class Address {
-  line: string[]
-  city: string
-  state: string
-  postalCode: string
-  country: string
+  line: string[];
+  city: string;
+  state: string;
+  postalCode: string;
+  country: string;
 
-/**
- *Creates an instance of Address.
- * @param {string[]} line array of strings representing street address lines
- * @param {string} city string representing the city
- * @param {string} state string representing the state
- * @param {string} postalCode string representing the postal code
- * @param {string} country string representing the country
- * @memberof Address
- */
-constructor(line: string[], city: string, state: string, postalCode: string, country: string) {
+  /**
+   *Creates an instance of Address.
+   * @param {string[]} line array of strings representing street address lines
+   * @param {string} city string representing the city
+   * @param {string} state string representing the state
+   * @param {string} postalCode string representing the postal code
+   * @param {string} country string representing the country
+   * @memberof Address
+   */
+  constructor(
+    line: string[],
+    city: string,
+    state: string,
+    postalCode: string,
+    country: string
+  ) {
     this.line = line;
     this.city = city;
     this.state = state;
@@ -66,33 +72,34 @@ constructor(line: string[], city: string, state: string, postalCode: string, cou
  * @class Name
  */
 export class Name {
-  family: string
-  given: string[]
-  prefix: string[]
-  use: string
-/**
- *Creates an instance of Name.
- * @param {string} family string represenintg family name
- * @param {string[]} given array of strings representing given name/s
- * @param {string[]} prefix array of strings representing prefix/s
- * @param {string} use string representing the use case of the name
- * @memberof Name
- */
-constructor(family: string, given: string[], prefix: string[], use: string) {
+  family: string;
+  given: string[];
+  prefix: string[];
+  use: string;
+  /**
+   *Creates an instance of Name.
+   * @param {string} family string represenintg family name
+   * @param {string[]} given array of strings representing given name/s
+   * @param {string[]} prefix array of strings representing prefix/s
+   * @param {string} use string representing the use case of the name
+   * @memberof Name
+   */
+  constructor(family: string, given: string[], prefix: string[], use: string) {
     this.family = family;
     this.given = given;
     this.prefix = prefix;
     this.use = use;
-
   }
-/**
- * Returns a displayable concatenated name
- *
- * @returns {string} returns a string with prefix, given and family name concatenated
- * @memberof Name
- */
-toString(): string {
-    return `${this.prefix ? this.prefix.join(" ") : ""} ${this.given ? this.given.join(" ") : ""} ${this.family}`;
+  /**
+   * Returns a displayable concatenated name
+   *
+   * @returns {string} returns a string with prefix, given and family name concatenated
+   * @memberof Name
+   */
+  toString(): string {
+    return `${this.prefix ? this.prefix.join(' ') : ''} ${
+      this.given ? this.given.join(' ') : ''
+    } ${this.family}`;
   }
 }
 /**
@@ -102,69 +109,69 @@ toString(): string {
  * @class Measurement
  */
 export class Measurement {
-  unit: string
-  value: number
-/**
- *Creates an instance of Measurement.
- * @param {string} unit string representing the unit of measurement
- * @param {number} newValue number representing the numerical value of the measurement
- * @memberof Measurement
- */
-constructor(unit: string, value: number) {
+  unit: string;
+  value: number;
+  /**
+   *Creates an instance of Measurement.
+   * @param {string} unit string representing the unit of measurement
+   * @param {number} newValue number representing the numerical value of the measurement
+   * @memberof Measurement
+   */
+  constructor(unit: string, value: number) {
     this.unit = unit;
     this.value = value;
   }
-/**
- * Returns a string with a displayable measurement
- *
- * @returns {string} returns a string with the value and units of the measurement concatenated
- * @memberof Measurement
- */
-toString(): string {
-    return this.value + " " + this.unit;
+  /**
+   * Returns a string with a displayable measurement
+   *
+   * @returns {string} returns a string with the value and units of the measurement concatenated
+   * @memberof Measurement
+   */
+  toString(): string {
+    return this.value + ' ' + this.unit;
   }
 }
 /**
- * Class representing an Observation 
+ * Class representing an Observation
  *
  * @export
  * @class Observation
  */
 export class Observation {
-  effectiveDateTime: string
-  value: Measurement
-  coding: Coding
-/**
- *Creates an instance of Observation.
- * @param {Measurement} value Measurement that represents the measurement taken during the Observation
- * @param {string} effectiveDateTime string representing the time that the Observation occurred
- * @param {Coding} coding Coding object that is associated with the Observation
- * @memberof Observation
- */
-constructor(value: Measurement, effectiveDateTime: string, coding: Coding) {
+  effectiveDateTime: string;
+  value: Measurement;
+  coding: Coding;
+  /**
+   *Creates an instance of Observation.
+   * @param {Measurement} value Measurement that represents the measurement taken during the Observation
+   * @param {string} effectiveDateTime string representing the time that the Observation occurred
+   * @param {Coding} coding Coding object that is associated with the Observation
+   * @memberof Observation
+   */
+  constructor(value: Measurement, effectiveDateTime: string, coding: Coding) {
     this.value = value;
     this.effectiveDateTime = effectiveDateTime;
     this.coding = coding;
   }
 }
 /**
- * Class representing an identifier attached to a resource in the FHIR system 
+ * Class representing an identifier attached to a resource in the FHIR system
  *
  * @export
  * @class Coding
  */
 export class Coding {
-  code: string
-  display: string
-  system: string
-/**
- *Creates an instance of Coding.
- * @param {string} code a string representing the sequence that denotes the identifier
- * @param {string} display the associated displayable text to the code
- * @param {string} system the system from which the code is derived
- * @memberof Coding
- */
-constructor(code: string, display: string, system: string) {
+  code: string;
+  display: string;
+  system: string;
+  /**
+   *Creates an instance of Coding.
+   * @param {string} code a string representing the sequence that denotes the identifier
+   * @param {string} display the associated displayable text to the code
+   * @param {string} system the system from which the code is derived
+   * @memberof Coding
+   */
+  constructor(code: string, display: string, system: string) {
     this.code = code;
     this.display = display;
     this.system = system;
@@ -177,17 +184,16 @@ constructor(code: string, display: string, system: string) {
  * @class BloodPressure
  */
 export class BloodPressure {
-  diastolic: Observation
-  systolic: Observation
-/**
- *Creates an instance of BloodPressure.
- * @param {Observation} diastolic an Observation representing the diastolic blood pressure reading
- * @param {Observation} systolic and Observation representing the systolic blood pressure reading
- * @memberof BloodPressure
- */
-constructor(diastolic: Observation, systolic: Observation) {
+  diastolic: Observation;
+  systolic: Observation;
+  /**
+   *Creates an instance of BloodPressure.
+   * @param {Observation} diastolic an Observation representing the diastolic blood pressure reading
+   * @param {Observation} systolic and Observation representing the systolic blood pressure reading
+   * @memberof BloodPressure
+   */
+  constructor(diastolic: Observation, systolic: Observation) {
     this.diastolic = diastolic;
     this.systolic = systolic;
   }
-
 }

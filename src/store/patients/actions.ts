@@ -4,6 +4,8 @@ import Patient from '../../DataModel/Patient';
 import { AppThunk } from '..';
 import { Observation, BloodPressure } from '../../DataModel/Resource';
 
+const HISTORY_COUNT = 5;
+
 /**
  * async function to fetch patients from dataSource
  * @param {string[]} practitionerIDs
@@ -71,7 +73,7 @@ export const fetchPatientCholesterol = (patientId: string): AppThunk<void> => as
 * @param {string} patientId
 * @returns {AppThunk<void>}
 */
-export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => async (dispatch) => {
+export const fetchPatientBloodPressure = (patientId: string, count: number): AppThunk<void> => async (dispatch) => {
   // Set loading
   dispatch({
     type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_REQUEST,
@@ -79,7 +81,7 @@ export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => 
   });
 
   // get data from dataSource
-  const bloodPressureData: BloodPressure[] | null = await dataSource.getBloodPressure(patientId, 1);
+  const bloodPressureData: BloodPressure[] | null = await dataSource.getBloodPressure(patientId, count);
 
   // Set results
   dispatch({
@@ -91,26 +93,43 @@ export const fetchPatientBloodPressure = (patientId: string): AppThunk<void> => 
 
 export const toggleMonitorPatient = (patient: Patient, type: string): AppThunk<void> => async (dispatch, getState) => {
 
-  if (type === PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL) {
-    if (!patient.cholesterol.monitored) {
-      dispatch(fetchPatientCholesterol(patient.id));
-    } else {
-      dispatch({
-        type: PatientsActionTypes.FETCH_CHOLESTEROL_DONE,
-        patientId: patient.id,
-        payload: undefined
-      });
-    }
-  } else if (type === PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE) {
-    if (!patient.bloodPressure.monitored) {
-      dispatch(fetchPatientBloodPressure(patient.id));
-    } else {
-      dispatch({
-        type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE,
-        patientId: patient.id,
-        payload: undefined
-      });
-    }
+  switch (type) {
+    case PatientsActionTypes.TOGGLE_MONITOR_CHOLESTEROL: 
+      if (!patient.cholesterol.monitored) {
+        dispatch(fetchPatientCholesterol(patient.id));
+      } else {
+        dispatch({
+          type: PatientsActionTypes.FETCH_CHOLESTEROL_DONE,
+          patientId: patient.id,
+          payload: undefined
+        });
+      }
+      break;
+    
+    case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE: 
+      if (!patient.bloodPressure.monitored) {
+        dispatch(fetchPatientBloodPressure(patient.id, 1));
+      } else {
+        dispatch({
+          type: PatientsActionTypes.FETCH_BLOOD_PRESSURE_DONE,
+          patientId: patient.id,
+          payload: undefined
+        });
+        // Also disable history together with blood pressure
+        if (patient.historyMonitored) {
+          dispatch({
+            type: PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE_HISTORY,
+            patientId: patient.id
+          })
+        }
+      }
+      break;
+    
+    case PatientsActionTypes.TOGGLE_MONITOR_BLOOD_PRESSURE_HISTORY:
+      if (!patient.historyMonitored) {
+        dispatch(fetchPatientBloodPressure(patient.id, HISTORY_COUNT));
+      }
+      break;
   }
 
   dispatch({

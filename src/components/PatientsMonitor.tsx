@@ -109,7 +109,7 @@ export default function PatientsMonitor() {
         }
       },
       {
-        Header: 'Time1',
+        Header: 'Time BP',
         accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].systolic.effectiveDateTime },
       }
     ],
