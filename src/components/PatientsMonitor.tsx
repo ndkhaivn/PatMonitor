@@ -85,7 +85,7 @@ export default function PatientsMonitor() {
         accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].systolic.value.value },
         Cell: (cellInfo: any) => {
           const bloodPressure: ClinicalData<BloodPressure[]> = cellInfo.row.original.bloodPressure;
-          const warningMarkup = (systolicThreshold !== undefined && bloodPressure.data?.[0].systolic.value.value! >= systolicThreshold && warningIcon);
+          const warningMarkup = (systolicThreshold !== undefined && bloodPressure.data?.[0].systolic.value.value! > systolicThreshold && warningIcon);
           return (
             bloodPressure.loading ? 
               spinnerMarkup : 
@@ -99,7 +99,7 @@ export default function PatientsMonitor() {
         accessor: (patient: Patient)  => { return patient.bloodPressure.data?.[0].diastolic.value.value },
         Cell: (cellInfo: any) => {
           const bloodPressure: ClinicalData<BloodPressure[]> = cellInfo.row.original.bloodPressure;
-          const warningMarkup = (diastolicThreshold !== undefined && bloodPressure.data?.[0].diastolic.value.value! >= diastolicThreshold && warningIcon);
+          const warningMarkup = (diastolicThreshold !== undefined && bloodPressure.data?.[0].diastolic.value.value! > diastolicThreshold && warningIcon);
           return (
             bloodPressure.loading ? 
             spinnerMarkup : 
