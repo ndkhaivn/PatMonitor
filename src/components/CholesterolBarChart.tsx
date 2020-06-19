@@ -25,7 +25,7 @@ export default function CholesterolBarChart() {
   let options = {
     chart: {
       type: 'bar',
-      height: 500,
+      height: 600,
     },
     title: {
       text: 'Cholesterol Level',
@@ -41,13 +41,16 @@ export default function CholesterolBarChart() {
           return val + "mg/dL";
         }
       }
+    },
+    yaxis: {
+      max: 300
     }
   };
 
   return (
     <div id="chart">
       <H3 className="text-center"> CHOLESTEROL MONITOR </H3>
-      {patients.length > 0 && <ReactApexChart options={options} series={series} type="bar" height={500} />}
+      {patients.length > 0 && <ReactApexChart options={options} series={series} type="bar" height={600} />}
     </div>
   )
 }
